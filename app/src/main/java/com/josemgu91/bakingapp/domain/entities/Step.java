@@ -6,10 +6,10 @@ package com.josemgu91.bakingapp.domain.entities;
 
 public class Step {
 
-    private String shortDescription;
-    private String longDescription;
-    private String pictureUrl;
-    private String videoUrl;
+    private final String shortDescription;
+    private final String longDescription;
+    private final String pictureUrl;
+    private final String videoUrl;
 
     public Step(String shortDescription, String longDescription, String pictureUrl, String videoUrl) {
         this.shortDescription = shortDescription;
