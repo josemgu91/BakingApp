@@ -4,8 +4,8 @@ import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
 import com.josemgu91.bakingapp.domain.datagateways.StepDataGateway;
 import com.josemgu91.bakingapp.domain.entities.Step;
 import com.josemgu91.bakingapp.domain.usecases.common.AbstractGetUseCase;
-import com.josemgu91.bakingapp.domain.usecases.common.ListMapper;
-import com.josemgu91.bakingapp.domain.usecases.common.OutputMapper;
+import com.josemgu91.bakingapp.domain.util.ListMapper;
+import com.josemgu91.bakingapp.domain.util.OutputMapper;
 import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
 
 import java.util.List;

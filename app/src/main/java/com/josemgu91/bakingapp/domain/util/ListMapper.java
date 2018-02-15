@@ -1,4 +1,4 @@
-package com.josemgu91.bakingapp.domain.usecases.common;
+package com.josemgu91.bakingapp.domain.util;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.josemgu91.bakingapp.domain.usecases.common;
 
 import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
+import com.josemgu91.bakingapp.domain.util.OutputMapper;
 
 import java.util.Collection;
 

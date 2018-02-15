@@ -1,4 +1,4 @@
-package com.josemgu91.bakingapp.domain.usecases.common;
+package com.josemgu91.bakingapp.domain.util;
 
 /**
  * Created by jose on 2/14/18.
