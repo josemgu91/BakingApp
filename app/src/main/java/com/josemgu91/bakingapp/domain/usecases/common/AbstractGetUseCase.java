@@ -10,27 +10,27 @@ import java.util.Collection;
 
 public abstract class AbstractGetUseCase<Entity extends Collection, Output extends Collection> {
 
-    private final UseCaseOutput<Output> useCaseOutput;
+    private final GetUseCaseOutput<Output> getUseCaseOutput;
     private final OutputMapper<Entity, Output> outputMapper;
 
-    public AbstractGetUseCase(UseCaseOutput<Output> useCaseOutput, OutputMapper<Entity, Output> outputMapper) {
-        this.useCaseOutput = useCaseOutput;
+    public AbstractGetUseCase(GetUseCaseOutput<Output> getUseCaseOutput, OutputMapper<Entity, Output> outputMapper) {
+        this.getUseCaseOutput = getUseCaseOutput;
         this.outputMapper = outputMapper;
     }
 
     public void execute() {
         try {
-            useCaseOutput.showInProgress();
+            getUseCaseOutput.showInProgress();
             final Entity data = getData();
             if (data.size() == 0) {
-                useCaseOutput.showNoResult();
+                getUseCaseOutput.showNoResult();
             } else {
                 final Output output = outputMapper.map(data);
-                useCaseOutput.showResult(output);
+                getUseCaseOutput.showResult(output);
             }
         } catch (DataGatewayException e) {
             e.printStackTrace();
-            useCaseOutput.showRetrieveError();
+            getUseCaseOutput.showRetrieveError();
         }
     }
 

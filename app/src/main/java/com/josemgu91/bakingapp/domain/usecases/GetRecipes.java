@@ -6,7 +6,7 @@ import com.josemgu91.bakingapp.domain.entities.Recipe;
 import com.josemgu91.bakingapp.domain.usecases.common.AbstractGetUseCase;
 import com.josemgu91.bakingapp.domain.usecases.common.ListMapper;
 import com.josemgu91.bakingapp.domain.usecases.common.OutputMapper;
-import com.josemgu91.bakingapp.domain.usecases.common.UseCaseOutput;
+import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ public class GetRecipes extends AbstractGetUseCase<List<Recipe>, List<RecipeOutp
 
     private final RecipeDataGateway recipeDataGateway;
 
-    public GetRecipes(UseCaseOutput<List<RecipeOutput>> useCaseOutput, RecipeDataGateway recipeDataGateway) {
-        super(useCaseOutput, new ListMapper<>(new RecipeMapper()));
+    public GetRecipes(GetUseCaseOutput<List<RecipeOutput>> getUseCaseOutput, RecipeDataGateway recipeDataGateway) {
+        super(getUseCaseOutput, new ListMapper<>(new RecipeMapper()));
         this.recipeDataGateway = recipeDataGateway;
     }
 
