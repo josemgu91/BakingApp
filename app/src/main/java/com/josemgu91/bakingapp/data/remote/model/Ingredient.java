@@ -11,7 +11,7 @@ public class Ingredient {
 
     @SerializedName("quantity")
     @Expose
-    public int quantity;
+    public double quantity;
     @SerializedName("measure")
     @Expose
     public String measure;
