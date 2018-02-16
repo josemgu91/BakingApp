@@ -24,7 +24,7 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final GetRecipesController getRecipesController = new ControllerFactory(getActivity()).createGetRecipesController(this);
+        final GetRecipesController getRecipesController = new ControllerFactoryImpl(getActivity()).createGetRecipesController(this);
         getRecipesController.getRecipes();
     }
 
