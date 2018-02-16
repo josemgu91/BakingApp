@@ -1,8 +1,6 @@
 package com.josemgu91.bakingapp.android.ui;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,8 +15,6 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesPrese
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
-import java.util.concurrent.Executor;
-
 /**
  * Created by jose on 2/15/18.
  */
@@ -30,18 +26,16 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     private RecipesRecyclerViewAdapter recipesRecyclerViewAdapter;
 
     private UiThreadExecutor uiThreadExecutor;
+    private DefaultThreadPoolExecutor defaultThreadPoolExecutor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final GetRecipesPresenter getRecipesPresenter = new GetRecipesPresenter(this, new UiThreadExecutor(new Handler()));
+        uiThreadExecutor = new UiThreadExecutor();
+        defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
+        final GetRecipesPresenter getRecipesPresenter = new GetRecipesPresenter(this, uiThreadExecutor);
         final RemoteRetrofitRepository remoteRetrofitRepository = new RemoteRetrofitRepository();
-        getRecipesController = new GetRecipesController(getRecipesPresenter, remoteRetrofitRepository, new Executor() {
-            @Override
-            public void execute(@NonNull Runnable command) {
-                new Thread(command).start();
-            }
-        });
+        getRecipesController = new GetRecipesController(getRecipesPresenter, remoteRetrofitRepository, defaultThreadPoolExecutor);
         getRecipesController.getRecipes();
     }
 

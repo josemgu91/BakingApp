@@ -1,6 +1,7 @@
 package com.josemgu91.bakingapp.android.ui;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import java.util.concurrent.Executor;
@@ -13,8 +14,8 @@ public class UiThreadExecutor implements Executor {
 
     private final Handler uiThreadHandler;
 
-    public UiThreadExecutor(Handler uiThreadHandler) {
-        this.uiThreadHandler = uiThreadHandler;
+    public UiThreadExecutor() {
+        this.uiThreadHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
