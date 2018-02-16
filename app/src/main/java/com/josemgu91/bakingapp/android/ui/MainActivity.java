@@ -7,17 +7,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.josemgu91.bakingapp.R;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
+import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
-public class MainActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener {
+public class MainActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener, RecipeDetailFragment.OnStepSelectedListener {
 
     private final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
+    private final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
+
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
             @Override
             public void onFragmentResumed(FragmentManager fm, Fragment f) {
@@ -38,11 +43,21 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
             case FRAGMENT_TAG_RECIPES_FRAGMENT:
                 ((RecipesFragment) fragment).setOnRecipeSelectedListener(this);
                 break;
+            case FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT:
+                ((RecipeDetailFragment) fragment).setOnStepSelectedListener(this);
+                break;
         }
     }
 
     @Override
     public void onRecipeSelected(String recipeId) {
-        Toast.makeText(this, "Recipe ID: " + recipeId, Toast.LENGTH_SHORT).show();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
+                .commit();
+    }
+
+    @Override
+    public void onStepSelected(GetRecipeStepsViewModel.Step step) {
+        Toast.makeText(this, step.getShortDescription(), Toast.LENGTH_SHORT).show();
     }
 }
