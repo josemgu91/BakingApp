@@ -1,4 +1,4 @@
-package com.josemgu91.bakingapp.android.ui;
+package com.josemgu91.bakingapp.android.ui.recipe_detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

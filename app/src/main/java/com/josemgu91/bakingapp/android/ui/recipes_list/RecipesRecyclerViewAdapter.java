@@ -1,4 +1,4 @@
-package com.josemgu91.bakingapp.android.ui;
+package com.josemgu91.bakingapp.android.ui.recipes_list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.josemgu91.bakingapp.R;
+import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
 public class MainActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener {
 

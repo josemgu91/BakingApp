@@ -1,4 +1,4 @@
-package com.josemgu91.bakingapp.android.ui;
+package com.josemgu91.bakingapp.android.ui.recipe_step_detail;
 
 import android.support.v4.app.Fragment;
 

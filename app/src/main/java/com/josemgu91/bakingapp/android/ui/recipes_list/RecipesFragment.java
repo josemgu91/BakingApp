@@ -1,4 +1,4 @@
-package com.josemgu91.bakingapp.android.ui;
+package com.josemgu91.bakingapp.android.ui.recipes_list;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
+import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
 
 /**
  * Created by jose on 2/15/18.
