@@ -1,7 +1,7 @@
-package com.josemgu91.bakingapp.ui;
+package com.josemgu91.bakingapp.android.ui;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.josemgu91.bakingapp.R;
 
