@@ -28,7 +28,7 @@ public class GetRecipeStepsController extends AbstractController {
         executeInControllerExecutor(new Runnable() {
             @Override
             public void run() {
-                new GetRecipeSteps(getRecipeStepsUseCaseOutput, stepDataGateway, recipeId);
+                new GetRecipeSteps(getRecipeStepsUseCaseOutput, stepDataGateway, recipeId).execute();
             }
         });
     }
