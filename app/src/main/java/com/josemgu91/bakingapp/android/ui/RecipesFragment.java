@@ -21,6 +21,12 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
 
     private RecipesRecyclerViewAdapter recipesRecyclerViewAdapter;
 
+    private OnRecipeSelectedListener onRecipeSelectedListener;
+
+    public void setOnRecipeSelectedListener(OnRecipeSelectedListener onRecipeSelectedListener) {
+        this.onRecipeSelectedListener = onRecipeSelectedListener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +37,17 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_recipes, container, true);
+        final View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         final RecyclerView recyclerViewRecipes = view.findViewById(R.id.recyclerview_recipes);
         recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(inflater);
+        recipesRecyclerViewAdapter.setOnRecipeSelectedListener(new RecipesRecyclerViewAdapter.OnRecipeSelectedListener() {
+            @Override
+            public void onRecipeSelected(GetRecipesViewModel.Recipe recipe) {
+                if (onRecipeSelectedListener != null) {
+                    onRecipeSelectedListener.onRecipeSelected(recipe.getId());
+                }
+            }
+        });
         recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewRecipes.setAdapter(recipesRecyclerViewAdapter);
         return view;
@@ -61,6 +75,12 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
 
     @Override
     public void showNoResult() {
+
+    }
+
+    public interface OnRecipeSelectedListener {
+
+        void onRecipeSelected(final String recipeId);
 
     }
 

@@ -2,6 +2,7 @@ package com.josemgu91.bakingapp.android.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -20,6 +21,12 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
     private final LayoutInflater layoutInflater;
     private List<GetRecipesViewModel.Recipe> recipeList;
 
+    private OnRecipeSelectedListener onRecipeSelectedListener;
+
+    public void setOnRecipeSelectedListener(OnRecipeSelectedListener onRecipeSelectedListener) {
+        this.onRecipeSelectedListener = onRecipeSelectedListener;
+    }
+
     public RecipesRecyclerViewAdapter(LayoutInflater layoutInflater) {
         this.layoutInflater = layoutInflater;
         recipeList = new ArrayList<>();
@@ -32,8 +39,8 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
 
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
-        final String recipeName = recipeList.get(position).getName();
-        holder.textViewRecipeName.setText(recipeName);
+        final GetRecipesViewModel.Recipe recipe = recipeList.get(position);
+        holder.bind(recipe, onRecipeSelectedListener);
     }
 
     @Override
@@ -54,6 +61,24 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
             super(layoutInflater.inflate(R.layout.element_recipe, parent, false));
             textViewRecipeName = itemView.findViewById(R.id.textview_recipe_name);
         }
+
+        public void bind(final GetRecipesViewModel.Recipe recipe, final OnRecipeSelectedListener onRecipeSelectedListener) {
+            textViewRecipeName.setText(recipe.getName());
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (onRecipeSelectedListener != null) {
+                        onRecipeSelectedListener.onRecipeSelected(recipe);
+                    }
+                }
+            });
+        }
+
+    }
+
+    public interface OnRecipeSelectedListener {
+
+        void onRecipeSelected(GetRecipesViewModel.Recipe recipe);
 
     }
 
