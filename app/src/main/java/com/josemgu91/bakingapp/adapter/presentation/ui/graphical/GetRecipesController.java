@@ -6,6 +6,7 @@ import com.josemgu91.bakingapp.domain.usecases.RecipeOutput;
 import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 /**
  * Created by jose on 2/14/18.
@@ -15,14 +16,21 @@ public class GetRecipesController {
 
     private final GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput;
     private final RecipeDataGateway recipeDataGateway;
+    private final Executor controllerExecutor;
 
-    public GetRecipesController(GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput, RecipeDataGateway recipeDataGateway) {
+    public GetRecipesController(GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput, RecipeDataGateway recipeDataGateway, Executor controllerExecutor) {
         this.getRecipesUseCaseOutput = getRecipesUseCaseOutput;
         this.recipeDataGateway = recipeDataGateway;
+        this.controllerExecutor = controllerExecutor;
     }
 
     public void getRecipes() {
-        new GetRecipes(getRecipesUseCaseOutput, recipeDataGateway).execute();
+        controllerExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                new GetRecipes(getRecipesUseCaseOutput, recipeDataGateway).execute();
+            }
+        });
     }
 
 }
