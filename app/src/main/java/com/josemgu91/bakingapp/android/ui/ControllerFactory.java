@@ -1,5 +1,9 @@
 package com.josemgu91.bakingapp.android.ui;
 
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeIngredientsController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeIngredientsViewModel;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
@@ -11,10 +15,10 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 public interface ControllerFactory {
 
 
-    GetRecipesController createGetRecipesController(final View<GetRecipesViewModel> getRecipesView);
+    GetRecipesController createGetRecipesController(final View<GetRecipesViewModel> getRecipesViewModel);
 
-    //GetRecipesController createGetRecipeIngredientsController(final View<GetRecipesViewModel> getRecipesView);
+    GetRecipeIngredientsController createGetRecipeIngredientsController(final View<GetRecipeIngredientsViewModel> getRecipeIngredientsViewModel);
 
-    //GetRecipesController createGetRecipeStepsController(final View<GetRecipesViewModel> getRecipesView);
+    GetRecipeStepsController createGetRecipeStepsController(final View<GetRecipeStepsViewModel> getRecipeStepsViewModel);
 
 }
