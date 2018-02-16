@@ -7,6 +7,8 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesPrese
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.android.Application;
+import com.josemgu91.bakingapp.android.executors.DefaultThreadPoolExecutor;
+import com.josemgu91.bakingapp.android.executors.UiThreadExecutor;
 import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
 /**

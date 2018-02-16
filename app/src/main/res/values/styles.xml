@@ -8,4 +8,49 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="BaseCard" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardCornerRadius">4dp</item>
+    </style>
+
+    <style name="BaseCardContainer" parent="AppTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="RecipeCard" parent="BaseCard">
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="RecipeCardContainer" parent="BaseCardContainer">
+        <item name="android:minHeight">200dp</item>
+    </style>
+
+    <style name="StepCard" parent="BaseCard">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+    </style>
+
+    <style name="StepCardContainer" parent="BaseCardContainer">
+        <item name="android:minHeight">50dp</item>
+    </style>
+
+    <style name="IngredientCard" parent="BaseCard">
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+    </style>
+
+    <style name="IngredientCardContainer" parent="BaseCardContainer">
+        <item name="android:minHeight">50dp</item>
+    </style>
+
 </resources>

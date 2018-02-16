@@ -1,7 +1,7 @@
 package com.josemgu91.bakingapp.android;
 
-import com.josemgu91.bakingapp.android.ui.DefaultThreadPoolExecutor;
-import com.josemgu91.bakingapp.android.ui.UiThreadExecutor;
+import com.josemgu91.bakingapp.android.executors.DefaultThreadPoolExecutor;
+import com.josemgu91.bakingapp.android.executors.UiThreadExecutor;
 import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
 /**
