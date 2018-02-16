@@ -30,7 +30,7 @@ public class ControllerFactoryImpl implements ControllerFactory {
 
     public GetRecipesController createGetRecipesController(final View<GetRecipesViewModel> getRecipesView) {
         final GetRecipesPresenter getRecipesPresenter = new GetRecipesPresenter(getRecipesView, uiThreadExecutor);
-        return new GetRecipesController(getRecipesPresenter, remoteRetrofitRepository, defaultThreadPoolExecutor);
+        return new GetRecipesController(defaultThreadPoolExecutor, getRecipesPresenter, remoteRetrofitRepository);
     }
 
 }

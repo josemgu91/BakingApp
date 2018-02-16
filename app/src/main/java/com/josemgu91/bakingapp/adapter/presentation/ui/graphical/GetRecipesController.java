@@ -1,5 +1,6 @@
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical;
 
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractController;
 import com.josemgu91.bakingapp.domain.datagateways.RecipeDataGateway;
 import com.josemgu91.bakingapp.domain.usecases.GetRecipes;
 import com.josemgu91.bakingapp.domain.usecases.RecipeOutput;
@@ -12,23 +13,20 @@ import java.util.concurrent.Executor;
  * Created by jose on 2/14/18.
  */
 
-public class GetRecipesController {
+public class GetRecipesController extends AbstractController {
 
-    private final GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput;
-    private final RecipeDataGateway recipeDataGateway;
-    private final Executor controllerExecutor;
+    private final GetRecipes getRecipesUseCase;
 
-    public GetRecipesController(GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput, RecipeDataGateway recipeDataGateway, Executor controllerExecutor) {
-        this.getRecipesUseCaseOutput = getRecipesUseCaseOutput;
-        this.recipeDataGateway = recipeDataGateway;
-        this.controllerExecutor = controllerExecutor;
+    public GetRecipesController(Executor controllerExecutor, GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput, RecipeDataGateway recipeDataGateway) {
+        super(controllerExecutor);
+        getRecipesUseCase = new GetRecipes(getRecipesUseCaseOutput, recipeDataGateway);
     }
 
     public void getRecipes() {
-        controllerExecutor.execute(new Runnable() {
+        executeInControllerExecutor(new Runnable() {
             @Override
             public void run() {
-                new GetRecipes(getRecipesUseCaseOutput, recipeDataGateway).execute();
+                getRecipesUseCase.execute();
             }
         });
     }
