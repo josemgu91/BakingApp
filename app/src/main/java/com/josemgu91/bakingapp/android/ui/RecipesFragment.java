@@ -11,9 +11,7 @@ import android.view.ViewGroup;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesPresenter;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
-import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
 /**
  * Created by jose on 2/15/18.
@@ -21,21 +19,12 @@ import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
 public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<GetRecipesViewModel> {
 
-    private GetRecipesController getRecipesController;
-
     private RecipesRecyclerViewAdapter recipesRecyclerViewAdapter;
-
-    private UiThreadExecutor uiThreadExecutor;
-    private DefaultThreadPoolExecutor defaultThreadPoolExecutor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        uiThreadExecutor = new UiThreadExecutor();
-        defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
-        final GetRecipesPresenter getRecipesPresenter = new GetRecipesPresenter(this, uiThreadExecutor);
-        final RemoteRetrofitRepository remoteRetrofitRepository = new RemoteRetrofitRepository();
-        getRecipesController = new GetRecipesController(getRecipesPresenter, remoteRetrofitRepository, defaultThreadPoolExecutor);
+        final GetRecipesController getRecipesController = new ControllerFactory(getActivity()).createGetRecipesController(this);
         getRecipesController.getRecipes();
     }
 
