@@ -25,6 +25,7 @@
 package com.josemgu91.bakingapp.android.ui.recipe_detail;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +48,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
 
     public final static String PARAM_RECIPE_ID = "recipe_id";
 
-    public static RecipeDetailFragment newInstance(final String recipeId) {
+    public static RecipeDetailFragment newInstance(@NonNull final String recipeId) {
         final RecipeDetailFragment fragment = new RecipeDetailFragment();
         final Bundle arguments = new Bundle();
         arguments.putString(PARAM_RECIPE_ID, recipeId);
@@ -67,7 +68,9 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final String recipeId = getArguments().getString(PARAM_RECIPE_ID);
-        assert recipeId != null;
+        if (recipeId == null) {
+            throw new RuntimeException("Use the newInstance() static method instead the standard constructor!");
+        }
         final ControllerFactory controllerFactory = new ControllerFactoryImpl(getActivity());
         final RecipeDetailViewInterfaceAdapter recipeDetailViewInterfaceAdapter = new RecipeDetailViewInterfaceAdapter(controllerFactory, this);
         recipeDetailViewInterfaceAdapter.getGetRecipeIngredientsController().getIngredients(recipeId);
