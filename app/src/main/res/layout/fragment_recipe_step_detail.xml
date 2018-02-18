@@ -28,8 +28,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/view_recipe_step_video"
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/simpleexoplayerview_recipe_step_video"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="8dp"
@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_recipe_step_video"
+        app:layout_constraintTop_toBottomOf="@+id/simpleexoplayerview_recipe_step_video"
         app:layout_constraintVertical_weight="1">
 
         <TextView

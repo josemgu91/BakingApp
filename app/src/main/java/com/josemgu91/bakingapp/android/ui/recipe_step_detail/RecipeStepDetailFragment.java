@@ -24,6 +24,7 @@
 
 package com.josemgu91.bakingapp.android.ui.recipe_step_detail;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
 
@@ -41,8 +49,10 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
 
 public class RecipeStepDetailFragment extends Fragment {
 
-    private View viewRecipeStepVideo;
+    private SimpleExoPlayerView simpleExoPlayerViewRecipeStepVideo;
     private TextView textViewRecipeStep;
+
+    private static final String EXO_PLAYER_USER_AGENT = "BakingApp";
 
     private static final String PARAM_RECIPE_STEP_DESCRIPTION = "recipe_step_description";
     private static final String PARAM_RECIPE_STEP_VIDEO_URL = "recipe_step_video_url";
@@ -51,6 +61,8 @@ public class RecipeStepDetailFragment extends Fragment {
     private String recipeStepDescription;
     private String recipeStepVideoUrl;
     private String recipeStepPictureThumbnailUrl;
+
+    private SimpleExoPlayer simpleExoPlayer;
 
     /*
      * TODO: Maybe I can make a local Android parcelable view model,
@@ -77,15 +89,15 @@ public class RecipeStepDetailFragment extends Fragment {
         recipeStepVideoUrl = arguments.getString(PARAM_RECIPE_STEP_VIDEO_URL);
         recipeStepPictureThumbnailUrl = arguments.getString(PARAM_RECIPE_STEP_PICTURE_THUMBNAIL_URL);
         recipeStepDescription = recipeStepDescription != null ? recipeStepDescription : "";
-        recipeStepVideoUrl = recipeStepVideoUrl != null ? recipeStepDescription : "";
-        recipeStepPictureThumbnailUrl = recipeStepPictureThumbnailUrl != null ? recipeStepDescription : "";
+        recipeStepVideoUrl = recipeStepVideoUrl != null ? recipeStepVideoUrl : "";
+        recipeStepPictureThumbnailUrl = recipeStepPictureThumbnailUrl != null ? recipeStepPictureThumbnailUrl : "";
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
-        viewRecipeStepVideo = view.findViewById(R.id.view_recipe_step_video);
+        simpleExoPlayerViewRecipeStepVideo = view.findViewById(R.id.simpleexoplayerview_recipe_step_video);
         textViewRecipeStep = view.findViewById(R.id.textview_recipe_step);
         return view;
     }
@@ -93,5 +105,24 @@ public class RecipeStepDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         textViewRecipeStep.setText(recipeStepDescription);
+        if (!recipeStepVideoUrl.isEmpty()) {
+            initializeExoPlayer(recipeStepVideoUrl);
+        }
     }
+
+    private void initializeExoPlayer(final String uri) {
+        if (simpleExoPlayer == null) {
+            final MediaSource mediaSource = new ExtractorMediaSource.Factory(
+                    new DefaultDataSourceFactory(
+                            getActivity(),
+                            EXO_PLAYER_USER_AGENT
+                    )
+            ).createMediaSource(Uri.parse(uri));
+            simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector());
+            simpleExoPlayer.prepare(mediaSource);
+            simpleExoPlayer.setPlayWhenReady(true);
+            simpleExoPlayerViewRecipeStepVideo.setPlayer(simpleExoPlayer);
+        }
+    }
+
 }
