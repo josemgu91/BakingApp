@@ -89,4 +89,9 @@ public class RecipeStepDetailFragment extends Fragment {
         textViewRecipeStep = view.findViewById(R.id.textview_recipe_step);
         return view;
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        textViewRecipeStep.setText(recipeStepDescription);
+    }
 }

@@ -28,17 +28,18 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
 import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
+import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFragment;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
 public class MainActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener, RecipeDetailFragment.OnStepSelectedListener {
 
     private final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
     private final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
+    private final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
 
     private FragmentManager fragmentManager;
 
@@ -82,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
 
     @Override
     public void onStepSelected(GetRecipeStepsViewModel.Step step) {
-        Toast.makeText(this, step.getShortDescription(), Toast.LENGTH_SHORT).show();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
+                .commit();
     }
 }
