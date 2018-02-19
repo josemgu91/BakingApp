@@ -46,6 +46,8 @@ import retrofit2.Response;
 
 public class RemoteRetrofitRepository implements RecipeDataGateway, StepDataGateway, IngredientDataGateway {
 
+    private final boolean cacheServerResponse;
+
     private final BakingServerRetrofitApi bakingServerRetrofitApi;
     private final ListMapper<com.josemgu91.bakingapp.data.remote.model.Recipe, Recipe> recipeListMapper;
     private final ListMapper<com.josemgu91.bakingapp.data.remote.model.Ingredient, Ingredient> ingredientListMapper;
@@ -53,11 +55,12 @@ public class RemoteRetrofitRepository implements RecipeDataGateway, StepDataGate
 
     private List<com.josemgu91.bakingapp.data.remote.model.Recipe> cachedResponse;
 
-    public RemoteRetrofitRepository() {
+    public RemoteRetrofitRepository(final boolean cacheServerResponse) {
         this.bakingServerRetrofitApi = new BakingServerRetrofitController().createRetrofitClient();
         this.stepListMapper = new ListMapper<>(new StepMapper());
         this.ingredientListMapper = new ListMapper<>(new IngredientMapper());
         this.recipeListMapper = new ListMapper<>(new RecipeMapper(ingredientListMapper, stepListMapper));
+        this.cacheServerResponse = cacheServerResponse;
     }
 
     private com.josemgu91.bakingapp.data.remote.model.Recipe findRecipeById(List<com.josemgu91.bakingapp.data.remote.model.Recipe> recipes, String recipeId) {
@@ -111,13 +114,15 @@ public class RemoteRetrofitRepository implements RecipeDataGateway, StepDataGate
     }
 
     private List<com.josemgu91.bakingapp.data.remote.model.Recipe> getRecipesFromServerOrCache() throws DataGatewayException {
-        if (hasCachedResponse()) {
+        if (cacheServerResponse && hasCachedResponse()) {
             return cachedResponse;
         } else {
             try {
                 final List<com.josemgu91.bakingapp.data.remote.model.Recipe> serverResponse = getRecipesFromServer();
                 if (serverResponse != null) {
-                    cachedResponse = serverResponse;
+                    if (cacheServerResponse) {
+                        cachedResponse = serverResponse;
+                    }
                     return serverResponse;
                 } else {
                     throw new DataGatewayException("The server has responded with an error code!");

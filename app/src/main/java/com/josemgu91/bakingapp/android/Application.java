@@ -43,7 +43,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         uiThreadExecutor = new UiThreadExecutor();
         defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
-        remoteRetrofitRepository = new RemoteRetrofitRepository();
+        remoteRetrofitRepository = new RemoteRetrofitRepository(true);
     }
 
     public UiThreadExecutor getUiThreadExecutorInstance() {

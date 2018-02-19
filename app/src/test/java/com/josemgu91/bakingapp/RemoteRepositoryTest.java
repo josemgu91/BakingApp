@@ -45,7 +45,7 @@ public class RemoteRepositoryTest {
 
     @Before
     public void initRepository() {
-        remoteRetrofitRepository = new RemoteRetrofitRepository();
+        remoteRetrofitRepository = new RemoteRetrofitRepository(true);
     }
 
     @Test
