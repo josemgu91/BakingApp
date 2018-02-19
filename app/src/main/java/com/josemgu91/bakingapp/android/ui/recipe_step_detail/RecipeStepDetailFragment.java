@@ -34,17 +34,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.josemgu91.bakingapp.R;
@@ -54,7 +48,7 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
  * Created by jose on 2/15/18.
  */
 
-public class RecipeStepDetailFragment extends Fragment implements AudioManager.OnAudioFocusChangeListener, Player.EventListener {
+public class RecipeStepDetailFragment extends Fragment implements AudioManager.OnAudioFocusChangeListener, CustomExoPlayerEventListener.CustomExoPlayerEventListenerInterface {
 
     private SimpleExoPlayerView simpleExoPlayerViewRecipeStepVideo;
     private TextView textViewRecipeStep;
@@ -148,80 +142,26 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector());
             simpleExoPlayer.prepare(mediaSource);
             simpleExoPlayer.setPlayWhenReady(autoPlay);
-            simpleExoPlayer.addListener(this);
+            simpleExoPlayer.addListener(new CustomExoPlayerEventListener(this));
             simpleExoPlayerViewRecipeStepVideo.setPlayer(simpleExoPlayer);
         }
     }
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        switch (focusChange) {
-            case AudioManager.AUDIOFOCUS_GAIN:
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS:
-                simpleExoPlayer.setPlayWhenReady(false);
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                break;
-            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                break;
+        if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+            simpleExoPlayer.setPlayWhenReady(false);
         }
     }
 
     @Override
-    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if (playbackState == Player.STATE_READY) {
-            if (playWhenReady) {
-                mediaFocusManager.requestAudioFocus();
-            } else {
-                mediaFocusManager.abandonAudioFocus();
-            }
-        }
+    public void onExoPlayerPause() {
+        mediaFocusManager.abandonAudioFocus();
     }
 
     @Override
-    public void onTimelineChanged(Timeline timeline, Object manifest) {
-
-    }
-
-    @Override
-    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
-
-    }
-
-    @Override
-    public void onLoadingChanged(boolean isLoading) {
-
-    }
-
-    @Override
-    public void onRepeatModeChanged(int repeatMode) {
-
-    }
-
-    @Override
-    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-
-    }
-
-    @Override
-    public void onPlayerError(ExoPlaybackException error) {
-
-    }
-
-    @Override
-    public void onPositionDiscontinuity(int reason) {
-
-    }
-
-    @Override
-    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-
-    }
-
-    @Override
-    public void onSeekProcessed() {
-
+    public void onExoPlayerPlay() {
+        mediaFocusManager.requestAudioFocus();
     }
 
 }
