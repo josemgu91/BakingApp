@@ -24,6 +24,10 @@
 
 package com.josemgu91.bakingapp.android.ui.recipe_step_detail;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -66,6 +70,9 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private SimpleExoPlayer simpleExoPlayer;
     private MediaFocusManager mediaFocusManager;
 
+    private BroadcastReceiver noisyReceiver;
+    private IntentFilter noisyReceiverIntentFilter;
+
     /*
      * TODO: Maybe I can make a local Android parcelable view model,
      * but I think that for the moment this is good enough.
@@ -95,6 +102,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         recipeStepPictureThumbnailUrl = recipeStepPictureThumbnailUrl != null ? recipeStepPictureThumbnailUrl : "";
 
         mediaFocusManager = new MediaFocusManager(getActivity(), this);
+        initializeNoisyReceiver();
     }
 
     @Nullable
@@ -116,8 +124,15 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
+        getActivity().unregisterReceiver(noisyReceiver);
         simpleExoPlayer.setPlayWhenReady(false);
         mediaFocusManager.abandonAudioFocus();
     }
@@ -129,6 +144,20 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         simpleExoPlayer.release();
         simpleExoPlayer = null;
         mediaFocusManager.abandonAudioFocus();
+    }
+
+    private void initializeNoisyReceiver() {
+        noisyReceiverIntentFilter = new IntentFilter();
+        noisyReceiverIntentFilter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
+        noisyReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction() != null && intent.getAction().equals(AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
+                    simpleExoPlayer.setPlayWhenReady(false);
+                    mediaFocusManager.abandonAudioFocus();
+                }
+            }
+        };
     }
 
     private void initializeExoPlayer(final String uri, final boolean autoPlay) {
