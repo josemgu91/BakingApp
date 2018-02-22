@@ -24,18 +24,36 @@
 
 package com.josemgu91.bakingapp.android.widget;
 
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 /**
- * Created by jose on 2/20/18.
+ * Created by jose on 2/21/18.
  */
 
-public class RecipesWidgetProvider extends AppWidgetProvider {
+public class RecipesWidgetService extends Service {
 
     @Override
-    public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+    public void onCreate() {
+        super.onCreate();
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
 }
