@@ -24,7 +24,6 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/linearlayout_recipe_element"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -35,5 +34,11 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         tools:text="Recipe Name" />
+
+    <LinearLayout
+        android:id="@+id/linearlayout_ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
 </LinearLayout>

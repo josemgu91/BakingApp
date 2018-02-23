@@ -85,15 +85,18 @@ public class BundleableRecipe {
         for (int recipeIndex = 0; recipeIndex < recipeListSize; recipeIndex++) {
             final Bundle recipeBundle = bundle.getBundle("recipe" + recipeIndex);
             final List<GetRecipesWithIngredientsViewModel.Recipe.Ingredient> ingredientList = new ArrayList<>();
-            final int ingredientListSize = bundle.getInt(INGREDIENT_LIST_SIZE);
-            for (int ingredientIndex = 0; ingredientIndex < ingredientListSize; ingredientIndex++) {
-                final Bundle ingredientBundle = recipeBundle.getBundle("ingredient" + ingredientIndex);
-                final GetRecipesWithIngredientsViewModel.Recipe.Ingredient ingredient = new GetRecipesWithIngredientsViewModel.Recipe.Ingredient(
-                        ingredientBundle.getString(INGREDIENT_MEASURE_UNIT),
-                        ingredientBundle.getString(INGREDIENT_NAME),
-                        ingredientBundle.getDouble(INGREDIENT_QUANTITY)
-                );
-                ingredientList.add(ingredient);
+            final int ingredientListSize = recipeBundle.getInt(INGREDIENT_LIST_SIZE);
+            if (recipeListSize > 0) {
+                final Bundle ingredientListBundle = recipeBundle.getBundle(RECIPE_INGREDIENTS);
+                for (int ingredientIndex = 0; ingredientIndex < ingredientListSize; ingredientIndex++) {
+                    final Bundle ingredientBundle = ingredientListBundle.getBundle("ingredient" + ingredientIndex);
+                    final GetRecipesWithIngredientsViewModel.Recipe.Ingredient ingredient = new GetRecipesWithIngredientsViewModel.Recipe.Ingredient(
+                            ingredientBundle.getString(INGREDIENT_MEASURE_UNIT),
+                            ingredientBundle.getString(INGREDIENT_NAME),
+                            ingredientBundle.getDouble(INGREDIENT_QUANTITY)
+                    );
+                    ingredientList.add(ingredient);
+                }
             }
             final GetRecipesWithIngredientsViewModel.Recipe recipe = new GetRecipesWithIngredientsViewModel.Recipe(
                     recipeBundle.getString(RECIPE_ID),
