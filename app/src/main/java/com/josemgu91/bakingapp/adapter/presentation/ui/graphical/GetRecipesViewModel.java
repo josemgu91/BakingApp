@@ -49,6 +49,21 @@ public class GetRecipesViewModel {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GetRecipesViewModel that = (GetRecipesViewModel) o;
+
+        return recipes != null ? recipes.equals(that.recipes) : that.recipes == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return recipes != null ? recipes.hashCode() : 0;
+    }
+
     public static class Recipe {
 
         private final String id;
@@ -87,6 +102,28 @@ public class GetRecipesViewModel {
                     ", servings=" + servings +
                     ", pictureUrl='" + pictureUrl + '\'' +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Recipe recipe = (Recipe) o;
+
+            if (servings != recipe.servings) return false;
+            if (id != null ? !id.equals(recipe.id) : recipe.id != null) return false;
+            if (name != null ? !name.equals(recipe.name) : recipe.name != null) return false;
+            return pictureUrl != null ? pictureUrl.equals(recipe.pictureUrl) : recipe.pictureUrl == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = id != null ? id.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            result = 31 * result + servings;
+            result = 31 * result + (pictureUrl != null ? pictureUrl.hashCode() : 0);
+            return result;
         }
     }
 

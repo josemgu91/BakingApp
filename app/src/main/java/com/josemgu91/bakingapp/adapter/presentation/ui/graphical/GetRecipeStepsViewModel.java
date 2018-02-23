@@ -49,6 +49,21 @@ public class GetRecipeStepsViewModel {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GetRecipeStepsViewModel that = (GetRecipeStepsViewModel) o;
+
+        return steps != null ? steps.equals(that.steps) : that.steps == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return steps != null ? steps.hashCode() : 0;
+    }
+
     public static class Step {
 
         private final String shortDescription;
@@ -87,6 +102,31 @@ public class GetRecipeStepsViewModel {
                     ", pictureUrl='" + pictureUrl + '\'' +
                     ", videoUrl='" + videoUrl + '\'' +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Step step = (Step) o;
+
+            if (shortDescription != null ? !shortDescription.equals(step.shortDescription) : step.shortDescription != null)
+                return false;
+            if (longDescription != null ? !longDescription.equals(step.longDescription) : step.longDescription != null)
+                return false;
+            if (pictureUrl != null ? !pictureUrl.equals(step.pictureUrl) : step.pictureUrl != null)
+                return false;
+            return videoUrl != null ? videoUrl.equals(step.videoUrl) : step.videoUrl == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = shortDescription != null ? shortDescription.hashCode() : 0;
+            result = 31 * result + (longDescription != null ? longDescription.hashCode() : 0);
+            result = 31 * result + (pictureUrl != null ? pictureUrl.hashCode() : 0);
+            result = 31 * result + (videoUrl != null ? videoUrl.hashCode() : 0);
+            return result;
         }
     }
 

@@ -49,6 +49,21 @@ public class GetRecipeIngredientsViewModel {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GetRecipeIngredientsViewModel that = (GetRecipeIngredientsViewModel) o;
+
+        return ingredients != null ? ingredients.equals(that.ingredients) : that.ingredients == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return ingredients != null ? ingredients.hashCode() : 0;
+    }
+
     public static class Ingredient {
 
         private final String measureUnit;
@@ -80,6 +95,30 @@ public class GetRecipeIngredientsViewModel {
                     ", name='" + name + '\'' +
                     ", quantity=" + quantity +
                     '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Ingredient that = (Ingredient) o;
+
+            if (Double.compare(that.quantity, quantity) != 0) return false;
+            if (measureUnit != null ? !measureUnit.equals(that.measureUnit) : that.measureUnit != null)
+                return false;
+            return name != null ? name.equals(that.name) : that.name == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result;
+            long temp;
+            result = measureUnit != null ? measureUnit.hashCode() : 0;
+            result = 31 * result + (name != null ? name.hashCode() : 0);
+            temp = Double.doubleToLongBits(quantity);
+            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            return result;
         }
     }
 
