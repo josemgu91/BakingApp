@@ -28,11 +28,18 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.RemoteViews;
 
+import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
+import com.josemgu91.bakingapp.domain.util.ListMapper;
+import com.josemgu91.bakingapp.domain.util.OutputMapper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jose on 2/21/18.
@@ -47,16 +54,6 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
         getRecipesWithIngredientsController.getRecipesWithIngredients();
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -65,7 +62,10 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
 
     @Override
     public void showResult(GetRecipesWithIngredientsViewModel getRecipesWithIngredientsViewModel) {
-
+        final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_recipes);
+        final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class)
+                .putParcelableArrayListExtra(RemoteViewsService.EXTRA_RECIPES, mapRecipesToParcelableRecipes(getRecipesWithIngredientsViewModel.getRecipes()));
+        remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
     }
 
     @Override
@@ -82,4 +82,32 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
     public void showNoResult() {
 
     }
+
+    private ArrayList<RemoteViewsService.Recipe> mapRecipesToParcelableRecipes(List<GetRecipesWithIngredientsViewModel.Recipe> recipes) {
+        final ListMapper<GetRecipesWithIngredientsViewModel.Recipe, RemoteViewsService.Recipe> listMapper = new ListMapper<>(new RecipeViewModelToParcelableRecipeMapper());
+        return new ArrayList<>(listMapper.map(recipes));
+    }
+
+    private static class RecipeViewModelToParcelableRecipeMapper implements OutputMapper<GetRecipesWithIngredientsViewModel.Recipe, RemoteViewsService.Recipe> {
+
+        @Override
+        public RemoteViewsService.Recipe map(GetRecipesWithIngredientsViewModel.Recipe recipe) {
+            final List<RemoteViewsService.Recipe.Ingredient> ingredients = new ArrayList<>();
+            for (final GetRecipesWithIngredientsViewModel.Recipe.Ingredient ingredient : recipe.getIngredients()) {
+                ingredients.add(new RemoteViewsService.Recipe.Ingredient(
+                        ingredient.getMeasureUnit(),
+                        ingredient.getName(),
+                        ingredient.getQuantity()
+                ));
+            }
+            return new RemoteViewsService.Recipe(
+                    recipe.getId(),
+                    recipe.getName(),
+                    recipe.getServings(),
+                    recipe.getPictureUrl(),
+                    ingredients
+            );
+        }
+    }
+
 }
