@@ -30,6 +30,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.RemoteViews;
 
+import com.josemgu91.bakingapp.R;
+
 import java.util.List;
 
 /**
@@ -77,12 +79,20 @@ public class RemoteViewsService extends android.widget.RemoteViewsService {
 
         @Override
         public int getCount() {
-            return 0;
+            return recipes.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
-            return null;
+            final Recipe recipe = recipes.get(position);
+            final RemoteViews remoteViewsRecipe = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_element);
+            remoteViewsRecipe.setTextViewText(R.id.textview_recipe_name, recipe.name);
+            for (final Recipe.Ingredient ingredient : recipe.ingredients) {
+                final RemoteViews remoteViewsIngredient = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredient);
+                remoteViewsIngredient.setTextViewText(R.id.textview_recipe_ingredient_name, ingredient.name);
+                remoteViewsRecipe.addView(R.id.linearlayout_recipe_element, remoteViewsIngredient);
+            }
+            return remoteViewsRecipe;
         }
 
         @Override
@@ -92,17 +102,17 @@ public class RemoteViewsService extends android.widget.RemoteViewsService {
 
         @Override
         public int getViewTypeCount() {
-            return 0;
+            return 1;
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return Long.valueOf(recipes.get(position).id);
         }
 
         @Override
         public boolean hasStableIds() {
-            return false;
+            return true;
         }
 
     }
