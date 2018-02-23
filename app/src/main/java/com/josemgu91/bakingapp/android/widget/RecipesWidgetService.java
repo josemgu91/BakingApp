@@ -103,7 +103,7 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
     @Override
     public void showResult(GetRecipesWithIngredientsViewModel getRecipesWithIngredientsViewModel) {
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_recipes);
-        final Bundle recipeListBundle = new BundleableRecipe().toBundle(getRecipesWithIngredientsViewModel.getRecipes());
+        final Bundle recipeListBundle = new RecipeBundleMapper().toBundle(getRecipesWithIngredientsViewModel.getRecipes());
         final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class)
                 .putExtra(RemoteViewsService.PARAM_RECIPES, recipeListBundle);
         remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);

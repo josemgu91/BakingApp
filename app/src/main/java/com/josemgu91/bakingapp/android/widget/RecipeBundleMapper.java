@@ -35,7 +35,7 @@ import java.util.List;
  * Created by jose on 2/23/18.
  */
 
-public class BundleableRecipe {
+public class RecipeBundleMapper {
 
     private final static String RECIPE_LIST_SIZE = "recipeListSize";
 

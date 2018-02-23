@@ -44,7 +44,7 @@ public class RemoteViewsService extends android.widget.RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         if (intent.hasExtra(PARAM_RECIPES)) {
-            final List<GetRecipesWithIngredientsViewModel.Recipe> recipes = new BundleableRecipe().fromBundle(intent.getBundleExtra(PARAM_RECIPES));
+            final List<GetRecipesWithIngredientsViewModel.Recipe> recipes = new RecipeBundleMapper().fromBundle(intent.getBundleExtra(PARAM_RECIPES));
             return new RemoteViewsFactory(this, recipes);
         } else {
             throw new IllegalStateException("The Intent hasn't the PARAM_RECIPES content!");
