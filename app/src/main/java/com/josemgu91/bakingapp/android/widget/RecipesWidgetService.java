@@ -28,6 +28,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -55,11 +56,17 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
     private static final int FOREGROUND_NOTIFICATION_ID = 1;
     private static final String FOREGROUND_NOTIFICATION_CHANNEL_ID = "RecipesWidgetService";
 
+    public final static String PARAM_WIDGET_IDS = "com.josemgu91.bakingapp.WIDGET_IDS";
+
+    private AppWidgetManager appWidgetManager;
+    private int[] widgetIds;
+
     @Override
     public void onCreate() {
         super.onCreate();
         final GetRecipesWithIngredientsController getRecipesWithIngredientsController = new ControllerFactoryImpl(this).createGetRecipesWithIngredientsController(this);
         getRecipesWithIngredientsController.getRecipesWithIngredients();
+        appWidgetManager = AppWidgetManager.getInstance(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final NotificationChannel notificationChannel = new NotificationChannel(
                     FOREGROUND_NOTIFICATION_CHANNEL_ID,
@@ -81,6 +88,16 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
         }
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent.hasExtra(PARAM_WIDGET_IDS)) {
+            widgetIds = intent.getIntArrayExtra(PARAM_WIDGET_IDS);
+        } else {
+            throw new IllegalStateException("The Intent hasn't the PARAM_RECIPES content!");
+        }
+        return START_NOT_STICKY;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -91,8 +108,9 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
     public void showResult(GetRecipesWithIngredientsViewModel getRecipesWithIngredientsViewModel) {
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_recipes);
         final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class)
-                .putParcelableArrayListExtra(RemoteViewsService.EXTRA_RECIPES, mapRecipesToParcelableRecipes(getRecipesWithIngredientsViewModel.getRecipes()));
+                .putParcelableArrayListExtra(RemoteViewsService.PARAM_RECIPES, mapRecipesToParcelableRecipes(getRecipesWithIngredientsViewModel.getRecipes()));
         remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
+        updateWidgets(remoteViews);
         finishService();
     }
 
@@ -115,6 +133,13 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
         stopSelf();
     }
 
+    private void updateWidgets(final RemoteViews remoteViews) {
+        if (widgetIds == null) {
+            throw new IllegalStateException("widgetIds is null!");
+        }
+        appWidgetManager.updateAppWidget(widgetIds, remoteViews);
+    }
+
     private ArrayList<RemoteViewsService.Recipe> mapRecipesToParcelableRecipes(List<GetRecipesWithIngredientsViewModel.Recipe> recipes) {
         final ListMapper<GetRecipesWithIngredientsViewModel.Recipe, RemoteViewsService.Recipe> listMapper = new ListMapper<>(new RecipeViewModelToParcelableRecipeMapper());
         return new ArrayList<>(listMapper.map(recipes));
@@ -124,9 +149,9 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
 
         @Override
         public RemoteViewsService.Recipe map(GetRecipesWithIngredientsViewModel.Recipe recipe) {
-            final List<RemoteViewsService.Recipe.Ingredient> ingredients = new ArrayList<>();
+            final List<RemoteViewsService.Ingredient> ingredients = new ArrayList<>();
             for (final GetRecipesWithIngredientsViewModel.Recipe.Ingredient ingredient : recipe.getIngredients()) {
-                ingredients.add(new RemoteViewsService.Recipe.Ingredient(
+                ingredients.add(new RemoteViewsService.Ingredient(
                         ingredient.getMeasureUnit(),
                         ingredient.getName(),
                         ingredient.getQuantity()

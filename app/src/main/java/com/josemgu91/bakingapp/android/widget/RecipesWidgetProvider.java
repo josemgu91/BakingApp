@@ -39,6 +39,7 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final Intent intent = new Intent(context, RecipesWidgetService.class);
+        intent.putExtra(RecipesWidgetService.PARAM_WIDGET_IDS, appWidgetIds);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             /*Starting the service as foreground because the Android O background execution limits.
              *See: https://developer.android.com/about/versions/oreo/background.html
