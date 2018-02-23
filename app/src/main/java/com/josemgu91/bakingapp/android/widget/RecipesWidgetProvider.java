@@ -27,6 +27,8 @@ package com.josemgu91.bakingapp.android.widget;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 
 /**
  * Created by jose on 2/20/18.
@@ -36,6 +38,14 @@ public class RecipesWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds);
+        final Intent intent = new Intent(context, RecipesWidgetService.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /*Starting the service as foreground because the Android O background execution limits.
+             *See: https://developer.android.com/about/versions/oreo/background.html
+             */
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 }
