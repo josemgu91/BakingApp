@@ -29,15 +29,22 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
+import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
+
 /**
  * Created by jose on 2/21/18.
  */
 
-public class RecipesWidgetService extends Service {
+public class RecipesWidgetService extends Service implements View<GetRecipesWithIngredientsViewModel> {
 
     @Override
     public void onCreate() {
         super.onCreate();
+        final GetRecipesWithIngredientsController getRecipesWithIngredientsController = new ControllerFactoryImpl(this).createGetRecipesWithIngredientsController(this);
+        getRecipesWithIngredientsController.getRecipesWithIngredients();
     }
 
     @Override
@@ -56,4 +63,23 @@ public class RecipesWidgetService extends Service {
         return null;
     }
 
+    @Override
+    public void showResult(GetRecipesWithIngredientsViewModel getRecipesWithIngredientsViewModel) {
+
+    }
+
+    @Override
+    public void showInProgress() {
+
+    }
+
+    @Override
+    public void showRetrieveError() {
+
+    }
+
+    @Override
+    public void showNoResult() {
+
+    }
 }

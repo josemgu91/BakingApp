@@ -31,6 +31,8 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 
 /**
  * Created by jose on 2/16/18.
@@ -38,11 +40,12 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 
 public interface ControllerFactory {
 
-
     GetRecipesController createGetRecipesController(final View<GetRecipesViewModel> getRecipesViewModel);
 
     GetRecipeIngredientsController createGetRecipeIngredientsController(final View<GetRecipeIngredientsViewModel> getRecipeIngredientsViewModel);
 
     GetRecipeStepsController createGetRecipeStepsController(final View<GetRecipeStepsViewModel> getRecipeStepsViewModel);
+
+    GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(final View<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel);
 
 }

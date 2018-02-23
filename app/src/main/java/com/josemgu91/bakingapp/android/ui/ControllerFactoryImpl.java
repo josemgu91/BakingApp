@@ -36,6 +36,9 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesContr
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesPresenter;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsPresenter;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.Application;
 import com.josemgu91.bakingapp.android.executors.DefaultThreadPoolExecutor;
 import com.josemgu91.bakingapp.android.executors.UiThreadExecutor;
@@ -73,6 +76,12 @@ public class ControllerFactoryImpl implements ControllerFactory {
     public GetRecipeStepsController createGetRecipeStepsController(View<GetRecipeStepsViewModel> getRecipeStepsViewModel) {
         final GetRecipeStepsPresenter getRecipeStepsPresenter = new GetRecipeStepsPresenter(getRecipeStepsViewModel, uiThreadExecutor);
         return new GetRecipeStepsController(defaultThreadPoolExecutor, getRecipeStepsPresenter, remoteRetrofitRepository);
+    }
+
+    @Override
+    public GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(View<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel) {
+        final GetRecipesWithIngredientsPresenter getRecipesWithIngredientsPresenter = new GetRecipesWithIngredientsPresenter(getRecipesWithIngredientsViewModel, uiThreadExecutor);
+        return new GetRecipesWithIngredientsController(defaultThreadPoolExecutor, getRecipesWithIngredientsPresenter, remoteRetrofitRepository);
     }
 
 }
