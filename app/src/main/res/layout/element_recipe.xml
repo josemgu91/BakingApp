@@ -58,6 +58,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/primaryTextColor"
                 app:layout_constraintBottom_toTopOf="@+id/textview_recipe_servings"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="Recipe Name" />
