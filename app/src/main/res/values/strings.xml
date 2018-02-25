@@ -30,4 +30,6 @@
     <string name="widget_notification_channel">Recipes Widget Notifications</string>
 
     <string name="widget_recipe_servings">%d Servings</string>
+
+    <string name="recipe_card_servings">%d Servings</string>
 </resources>

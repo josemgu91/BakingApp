@@ -24,10 +24,12 @@
 
 package com.josemgu91.bakingapp.android.ui.recipes_list;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.josemgu91.bakingapp.R;
@@ -43,6 +45,8 @@ import java.util.List;
 public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecyclerViewAdapter.RecipeViewHolder> {
 
     private final LayoutInflater layoutInflater;
+    private final Context context;
+
     private List<GetRecipesViewModel.Recipe> recipeList;
 
     private OnRecipeSelectedListener onRecipeSelectedListener;
@@ -51,14 +55,15 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
         this.onRecipeSelectedListener = onRecipeSelectedListener;
     }
 
-    public RecipesRecyclerViewAdapter(LayoutInflater layoutInflater) {
-        this.layoutInflater = layoutInflater;
+    public RecipesRecyclerViewAdapter(final Context context) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.context = context;
         recipeList = new ArrayList<>();
     }
 
     @Override
     public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new RecipeViewHolder(parent, layoutInflater);
+        return new RecipeViewHolder(parent, context, layoutInflater);
     }
 
     @Override
@@ -79,15 +84,23 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
 
     static class RecipeViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textViewRecipeName;
+        private final Context context;
 
-        public RecipeViewHolder(final ViewGroup parent, final LayoutInflater layoutInflater) {
+        private ImageView imageViewRecipePicture;
+        private TextView textViewRecipeName;
+        private TextView textViewRecipeServings;
+
+        public RecipeViewHolder(final ViewGroup parent, final Context context, final LayoutInflater layoutInflater) {
             super(layoutInflater.inflate(R.layout.element_recipe, parent, false));
+            this.context = context;
+            imageViewRecipePicture = itemView.findViewById(R.id.imageview_recipe_picture);
             textViewRecipeName = itemView.findViewById(R.id.textview_recipe_name);
+            textViewRecipeServings = itemView.findViewById(R.id.textview_recipe_servings);
         }
 
         public void bind(final GetRecipesViewModel.Recipe recipe, final OnRecipeSelectedListener onRecipeSelectedListener) {
             textViewRecipeName.setText(recipe.getName());
+            textViewRecipeServings.setText(context.getString(R.string.widget_recipe_servings, recipe.getServings()));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

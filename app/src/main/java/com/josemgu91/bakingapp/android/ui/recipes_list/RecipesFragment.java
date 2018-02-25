@@ -64,7 +64,7 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         final RecyclerView recyclerViewRecipes = view.findViewById(R.id.recyclerview_recipes);
-        recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(inflater);
+        recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(getActivity());
         recipesRecyclerViewAdapter.setOnRecipeSelectedListener(new RecipesRecyclerViewAdapter.OnRecipeSelectedListener() {
             @Override
             public void onRecipeSelected(GetRecipesViewModel.Recipe recipe) {
