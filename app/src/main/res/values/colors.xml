@@ -23,12 +23,12 @@
   -->
 
 <resources>
-    <color name="primary">#FF9800</color>
-    <color name="primary_dark">#F57C00</color>
-    <color name="primary_light">#FFE0B2</color>
-    <color name="accent">#448AFF</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="icons">#212121</color>
-    <color name="divider">#BDBDBD</color>
+    <color name="primaryColor">#ff9800</color>
+    <color name="primaryLightColor">#ffc947</color>
+    <color name="primaryDarkColor">#c66900</color>
+    <color name="secondaryColor">#2962ff</color>
+    <color name="secondaryLightColor">#768fff</color>
+    <color name="secondaryDarkColor">#0039cb</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
 </resources>

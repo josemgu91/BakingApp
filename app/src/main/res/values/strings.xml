@@ -28,4 +28,6 @@
     <string name="widget_notification_title">Recipes Widget</string>
     <string name="widget_notification_content">Loading recipes&#8230;</string>
     <string name="widget_notification_channel">Recipes Widget Notifications</string>
+
+    <string name="widget_recipe_servings">%d Servings</string>
 </resources>

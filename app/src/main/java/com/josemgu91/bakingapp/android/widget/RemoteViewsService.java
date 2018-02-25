@@ -86,10 +86,13 @@ public class RemoteViewsService extends android.widget.RemoteViewsService {
             final GetRecipesWithIngredientsViewModel.Recipe recipe = recipes.get(position);
             final RemoteViews remoteViewsRecipe = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_element);
             remoteViewsRecipe.setTextViewText(R.id.textview_recipe_name, recipe.getName());
+            remoteViewsRecipe.setTextViewText(R.id.textview_recipe_servings, context.getString(R.string.widget_recipe_servings, recipe.getServings()));
             remoteViewsRecipe.removeAllViews(R.id.linearlayout_ingredients);
             for (final GetRecipesWithIngredientsViewModel.Recipe.Ingredient ingredient : recipe.getIngredients()) {
                 final RemoteViews remoteViewsIngredient = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredient);
                 remoteViewsIngredient.setTextViewText(R.id.textview_recipe_ingredient_name, ingredient.getName());
+                remoteViewsIngredient.setTextViewText(R.id.textview_recipe_ingredient_quantity, String.valueOf(ingredient.getQuantity()));
+                remoteViewsIngredient.setTextViewText(R.id.textview_recipe_ingredient_measure_unit, ingredient.getMeasureUnit());
                 remoteViewsRecipe.addView(R.id.linearlayout_ingredients, remoteViewsIngredient);
             }
             return remoteViewsRecipe;
