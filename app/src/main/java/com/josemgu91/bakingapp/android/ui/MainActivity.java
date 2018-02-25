@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
                     .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
                     .commit();
         }
+        if (getIntent().hasExtra(PARAM_RECIPE_ID)) {
+            onRecipeSelected(getIntent().getStringExtra(PARAM_RECIPE_ID));
+        }
     }
 
     private void registerFragmentListener(final Fragment fragment) {
