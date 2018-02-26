@@ -73,6 +73,8 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private BroadcastReceiver noisyReceiver;
     private IntentFilter noisyReceiverIntentFilter;
 
+    private boolean hasVideo;
+
     /*
      * TODO: Maybe I can make a local Android parcelable view model,
      * but I think that for the moment this is good enough.
@@ -118,32 +120,40 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         textViewRecipeStep.setText(recipeStepDescription);
-        if (!recipeStepVideoUrl.isEmpty()) {
+        if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
             initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
+        } else {
+            simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+        if (hasVideo) {
+            getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        getActivity().unregisterReceiver(noisyReceiver);
-        simpleExoPlayer.setPlayWhenReady(false);
-        mediaFocusManager.abandonAudioFocus();
+        if (hasVideo) {
+            getActivity().unregisterReceiver(noisyReceiver);
+            simpleExoPlayer.setPlayWhenReady(false);
+            mediaFocusManager.abandonAudioFocus();
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        simpleExoPlayer.stop();
-        simpleExoPlayer.release();
-        simpleExoPlayer = null;
-        mediaFocusManager.abandonAudioFocus();
+        if (hasVideo) {
+            simpleExoPlayer.stop();
+            simpleExoPlayer.release();
+            simpleExoPlayer = null;
+            mediaFocusManager.abandonAudioFocus();
+        }
     }
 
     private void initializeNoisyReceiver() {
