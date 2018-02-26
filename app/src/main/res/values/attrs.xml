@@ -1,4 +1,4 @@
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ MIT License
   ~
   ~ Copyright (c) 2018 José Miguel García Urrutia.
@@ -23,21 +23,9 @@
   -->
 
 <resources>
-    <string name="app_name">Baking App</string>
-
-    <string name="widget_notification_title">Recipes Widget</string>
-    <string name="widget_notification_content">Loading recipes&#8230;</string>
-    <string name="widget_notification_channel">Recipes Widget Notifications</string>
-
-    <string name="widget_recipe_servings">%d Servings</string>
-
-    <string name="recipe_list_recipe_servings">%d Servings</string>
-    <string name="recipe_list_generic_error">Can\'t get recipes.</string>
-
-    <string name="recipe_detail_ingredient_quantity_and_unit">%1$4.2f %2$s</string>
-    <string name="recipe_detail_step_short_description">%1$d.- %2$s</string>
-    <string name="recipe_detail_header_ingredients">Ingredients</string>
-    <string name="recipe_detail_header_steps">Steps</string>
-
-    <string name="recipe_step_detail_header_step_description">Step Description</string>
+    <declare-styleable name="ErrorView">
+        <attr name="errorTextColor" format="color" />
+        <attr name="errorText" format="string" />
+        <attr name="errorDrawable" format="reference" />
+    </declare-styleable>
 </resources>

@@ -48,6 +48,10 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
 
     private OnRecipeSelectedListener onRecipeSelectedListener;
 
+    private RecyclerView recyclerViewRecipes;
+    private View progressBarRecipesRetrievingProgress;
+    private View errorViewErrorMessage;
+
     public void setOnRecipeSelectedListener(OnRecipeSelectedListener onRecipeSelectedListener) {
         this.onRecipeSelectedListener = onRecipeSelectedListener;
     }
@@ -63,7 +67,9 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipes, container, false);
-        final RecyclerView recyclerViewRecipes = view.findViewById(R.id.recyclerview_recipes);
+        progressBarRecipesRetrievingProgress = view.findViewById(R.id.progressbar_recipes_retrieving_progress);
+        errorViewErrorMessage = view.findViewById(R.id.errorview_error_message);
+        recyclerViewRecipes = view.findViewById(R.id.recyclerview_recipes);
         recipesRecyclerViewAdapter = new RecipesRecyclerViewAdapter(getActivity(), inflater);
         recipesRecyclerViewAdapter.setOnRecipeSelectedListener(new RecipesRecyclerViewAdapter.OnRecipeSelectedListener() {
             @Override
@@ -79,28 +85,32 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void showResult(final GetRecipesViewModel getRecipesViewModel) {
+        progressBarRecipesRetrievingProgress.setVisibility(View.GONE);
+        errorViewErrorMessage.setVisibility(View.GONE);
+        recyclerViewRecipes.setVisibility(View.VISIBLE);
         recipesRecyclerViewAdapter.setRecipes(getRecipesViewModel.getRecipes());
     }
 
     @Override
     public void showInProgress() {
-
+        progressBarRecipesRetrievingProgress.setVisibility(View.VISIBLE);
+        errorViewErrorMessage.setVisibility(View.GONE);
+        recyclerViewRecipes.setVisibility(View.GONE);
     }
 
     @Override
     public void showRetrieveError() {
-
+        progressBarRecipesRetrievingProgress.setVisibility(View.GONE);
+        errorViewErrorMessage.setVisibility(View.VISIBLE);
+        recyclerViewRecipes.setVisibility(View.GONE);
     }
 
     @Override
     public void showNoResult() {
-
+        progressBarRecipesRetrievingProgress.setVisibility(View.GONE);
+        errorViewErrorMessage.setVisibility(View.GONE);
+        recyclerViewRecipes.setVisibility(View.VISIBLE);
     }
 
     public interface OnRecipeSelectedListener {
