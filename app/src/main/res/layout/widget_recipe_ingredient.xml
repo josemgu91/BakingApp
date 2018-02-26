@@ -56,8 +56,7 @@
             android:layout_marginStart="4dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@color/primaryTextColor"
-            android:textStyle="bold"
+            android:textColor="@color/secondaryTextColor"
             tools:text="10" />
 
 
@@ -69,8 +68,7 @@
             android:layout_marginStart="2dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@color/primaryTextColor"
-            android:textStyle="bold"
+            android:textColor="@color/secondaryTextColor"
             tools:text="kg" />
 
     </LinearLayout>

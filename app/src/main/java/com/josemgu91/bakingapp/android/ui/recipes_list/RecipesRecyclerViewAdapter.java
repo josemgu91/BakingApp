@@ -55,8 +55,8 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
         this.onRecipeSelectedListener = onRecipeSelectedListener;
     }
 
-    public RecipesRecyclerViewAdapter(final Context context) {
-        this.layoutInflater = LayoutInflater.from(context);
+    public RecipesRecyclerViewAdapter(final Context context, final LayoutInflater layoutInflater) {
+        this.layoutInflater = layoutInflater;
         this.context = context;
         recipeList = new ArrayList<>();
     }

@@ -22,15 +22,17 @@
   ~ SOFTWARE.
   -->
 
-<resources>
-    <color name="primaryColor">#ff9800</color>
-    <color name="primaryLightColor">#ffc947</color>
-    <color name="primaryDarkColor">#c66900</color>
-    <color name="secondaryColor">#2962ff</color>
-    <color name="secondaryLightColor">#768fff</color>
-    <color name="secondaryDarkColor">#0039cb</color>
-    <color name="primaryTextColor">#212121</color>
-    <color name="secondaryTextColor">#757575</color>
-    <color name="whiteTextColor">#ffffff</color>
-    <color name="listDivider">#BDBDBD</color>
-</resources>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/SectionHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textview_section_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@color/primaryTextColor"
+        tools:text="Section Header" />
+</FrameLayout>

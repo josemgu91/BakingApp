@@ -82,7 +82,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
         final RecyclerView recyclerViewRecipeDetail = view.findViewById(R.id.recyclerview_recipe_detail);
-        recipeDetailRecyclerViewAdapter = new RecipeDetailRecyclerViewAdapter(inflater);
+        recipeDetailRecyclerViewAdapter = new RecipeDetailRecyclerViewAdapter(getActivity(), inflater);
         recipeDetailRecyclerViewAdapter.setOnStepSelectedListener(new RecipeDetailRecyclerViewAdapter.OnStepSelectedListener() {
             @Override
             public void onStepSelected(GetRecipeStepsViewModel.Step step) {
