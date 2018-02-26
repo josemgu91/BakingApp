@@ -24,6 +24,7 @@
 
 package com.josemgu91.bakingapp.android.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -66,8 +67,18 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
                     .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
                     .commit();
         }
-        if (getIntent().hasExtra(PARAM_RECIPE_ID)) {
-            onRecipeSelected(getIntent().getStringExtra(PARAM_RECIPE_ID));
+        verifyIntentAndShowRecipe(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        verifyIntentAndShowRecipe(intent);
+    }
+
+    private void verifyIntentAndShowRecipe(final Intent intent) {
+        if (intent.hasExtra(PARAM_RECIPE_ID)) {
+            onRecipeSelected(intent.getStringExtra(PARAM_RECIPE_ID));
         }
     }
 
