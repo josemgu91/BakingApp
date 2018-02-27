@@ -52,6 +52,8 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     private View progressBarRecipesRetrievingProgress;
     private View errorViewErrorMessage;
 
+    private GetRecipesController getRecipesController;
+
     public void setOnRecipeSelectedListener(OnRecipeSelectedListener onRecipeSelectedListener) {
         this.onRecipeSelectedListener = onRecipeSelectedListener;
     }
@@ -59,8 +61,7 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final GetRecipesController getGetRecipesController = new ControllerFactoryImpl(getActivity()).createGetRecipesController(this);
-        getGetRecipesController.getRecipes();
+        getRecipesController = new ControllerFactoryImpl(getActivity()).createGetRecipesController(this);
     }
 
     @Nullable
@@ -82,6 +83,13 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
         recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewRecipes.setAdapter(recipesRecyclerViewAdapter);
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        showInProgress();
+        getRecipesController.getRecipes();
     }
 
     @Override

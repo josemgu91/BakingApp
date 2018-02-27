@@ -40,6 +40,9 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
 import com.josemgu91.bakingapp.android.ui.ControllerFactory;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by jose on 2/15/18.
  */
@@ -60,6 +63,16 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
 
     private OnStepSelectedListener onStepSelectedListener;
 
+    private RecyclerView recyclerViewRecipeDetail;
+    private View progressBarRecipeDetailRetrievingProgress;
+    private View errorViewErrorMessage;
+
+    private AtomicBoolean atomicBooleanHasProgressStateTriggered = new AtomicBoolean(false);
+    private AtomicBoolean atomicBooleanHasErrorStateTriggered = new AtomicBoolean(false);
+    private AtomicInteger atomicIntegerResultCount = new AtomicInteger(0);
+
+    private RecipeDetailViewInterfaceAdapter recipeDetailViewInterfaceAdapter;
+
     public void setOnStepSelectedListener(OnStepSelectedListener onStepSelectedListener) {
         this.onStepSelectedListener = onStepSelectedListener;
     }
@@ -67,21 +80,17 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final String recipeId = getArguments().getString(PARAM_RECIPE_ID);
-        if (recipeId == null) {
-            throw new RuntimeException("Use the newInstance() static method instead the standard constructor!");
-        }
         final ControllerFactory controllerFactory = new ControllerFactoryImpl(getActivity());
-        final RecipeDetailViewInterfaceAdapter recipeDetailViewInterfaceAdapter = new RecipeDetailViewInterfaceAdapter(controllerFactory, this);
-        recipeDetailViewInterfaceAdapter.getGetRecipeIngredientsController().getIngredients(recipeId);
-        recipeDetailViewInterfaceAdapter.getGetRecipeStepsController().getSteps(recipeId);
+        recipeDetailViewInterfaceAdapter = new RecipeDetailViewInterfaceAdapter(controllerFactory, this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-        final RecyclerView recyclerViewRecipeDetail = view.findViewById(R.id.recyclerview_recipe_detail);
+        recyclerViewRecipeDetail = view.findViewById(R.id.recyclerview_recipe_detail);
+        progressBarRecipeDetailRetrievingProgress = view.findViewById(R.id.progressbar_recipe_details_retrieving_progress);
+        errorViewErrorMessage = view.findViewById(R.id.errorview_error_message);
         recipeDetailRecyclerViewAdapter = new RecipeDetailRecyclerViewAdapter(getActivity(), inflater);
         recipeDetailRecyclerViewAdapter.setOnStepSelectedListener(new RecipeDetailRecyclerViewAdapter.OnStepSelectedListener() {
             @Override
@@ -97,43 +106,97 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        showProgress();
+        final String recipeId = getArguments().getString(PARAM_RECIPE_ID);
+        if (recipeId == null) {
+            throw new RuntimeException("Use the newInstance() static method instead the standard constructor!");
+        }
+        recipeDetailViewInterfaceAdapter.getGetRecipeIngredientsController().getIngredients(recipeId);
+        recipeDetailViewInterfaceAdapter.getGetRecipeStepsController().getSteps(recipeId);
+    }
+
+    @Override
     public void showIngredients(GetRecipeIngredientsViewModel ingredientsViewModel) {
+        showSyncedResult();
         recipeDetailRecyclerViewAdapter.setIngredients(ingredientsViewModel.getIngredients());
     }
 
     @Override
     public void showSteps(GetRecipeStepsViewModel stepsViewModel) {
+        showSyncedResult();
         recipeDetailRecyclerViewAdapter.setSteps(stepsViewModel.getSteps());
     }
 
     @Override
     public void showStepsInProgress() {
-
+        showSyncedInProgress();
     }
 
     @Override
     public void showIngredientsInProgress() {
-
+        showSyncedInProgress();
     }
 
     @Override
     public void showStepsRetrieveError() {
-
+        showSyncedRetrieveError();
     }
 
     @Override
     public void showIngredientsRetrieveError() {
-
+        showSyncedRetrieveError();
     }
 
     @Override
     public void showStepsNoResult() {
-
+        showSyncedResult();
     }
 
     @Override
     public void showIngredientsNoResult() {
+        showSyncedResult();
+    }
 
+    private void showSyncedInProgress() {
+        if (!atomicBooleanHasProgressStateTriggered.get()) {
+            atomicBooleanHasProgressStateTriggered.set(true);
+            showProgress();
+        }
+    }
+
+    private void showSyncedRetrieveError() {
+        if (!atomicBooleanHasErrorStateTriggered.get()) {
+            atomicBooleanHasErrorStateTriggered.set(true);
+            showError();
+        }
+    }
+
+    private void showSyncedResult() {
+        if (atomicIntegerResultCount.get() == 1) {
+            showResult();
+        } else {
+            atomicIntegerResultCount.addAndGet(1);
+        }
+    }
+
+    private void showProgress() {
+        progressBarRecipeDetailRetrievingProgress.setVisibility(View.VISIBLE);
+        errorViewErrorMessage.setVisibility(View.GONE);
+        recyclerViewRecipeDetail.setVisibility(View.GONE);
+    }
+
+    private void showError() {
+        progressBarRecipeDetailRetrievingProgress.setVisibility(View.GONE);
+        errorViewErrorMessage.setVisibility(View.VISIBLE);
+        recyclerViewRecipeDetail.setVisibility(View.GONE);
+    }
+
+    private void showResult() {
+        progressBarRecipeDetailRetrievingProgress.setVisibility(View.GONE);
+        errorViewErrorMessage.setVisibility(View.GONE);
+        recyclerViewRecipeDetail.setVisibility(View.VISIBLE);
     }
 
     public interface OnStepSelectedListener {
