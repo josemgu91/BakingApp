@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
             final RecipesFragment recipesFragment = new RecipesFragment();
             fragmentManager
                     .beginTransaction()
+                    .setReorderingAllowed(true)
                     .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
                     .commit();
         }
@@ -96,6 +98,10 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
     @Override
     public void onRecipeSelected(String recipeId) {
         fragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
                 .commit();
     }
@@ -103,6 +109,10 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
     @Override
     public void onStepSelected(GetRecipeStepsViewModel.Step step) {
         fragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setReorderingAllowed(true)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .replace(R.id.fragment, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
                 .commit();
     }
