@@ -55,15 +55,16 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
 public class RecipeStepDetailFragment extends Fragment implements AudioManager.OnAudioFocusChangeListener, CustomExoPlayerEventListener.CustomExoPlayerEventListenerInterface {
 
     private SimpleExoPlayerView simpleExoPlayerViewRecipeStepVideo;
-    private TextView textViewRecipeStep;
 
     private static final String EXO_PLAYER_USER_AGENT = "BakingApp";
 
     private static final String PARAM_RECIPE_STEP_DESCRIPTION = "recipe_step_description";
+    private static final String PARAM_RECIPE_STEP_SHORT_DESCRIPTION = "recipe_step_short_description";
     private static final String PARAM_RECIPE_STEP_VIDEO_URL = "recipe_step_video_url";
     private static final String PARAM_RECIPE_STEP_PICTURE_THUMBNAIL_URL = "recipe_step_picture_thumbnail_url";
 
     private String recipeStepDescription;
+    private String recipeStepShortDescription;
     private String recipeStepVideoUrl;
     private String recipeStepPictureThumbnailUrl;
 
@@ -83,6 +84,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         final RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
         final Bundle arguments = new Bundle();
         arguments.putString(PARAM_RECIPE_STEP_DESCRIPTION, recipeStep.getLongDescription());
+        arguments.putString(PARAM_RECIPE_STEP_SHORT_DESCRIPTION, recipeStep.getShortDescription());
         arguments.putString(PARAM_RECIPE_STEP_VIDEO_URL, recipeStep.getVideoUrl());
         arguments.putString(PARAM_RECIPE_STEP_PICTURE_THUMBNAIL_URL, recipeStep.getPictureUrl());
         fragment.setArguments(arguments);
@@ -97,9 +99,11 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
             throw new RuntimeException("Use the newInstance() static method instead the standard constructor!");
         }
         recipeStepDescription = arguments.getString(PARAM_RECIPE_STEP_DESCRIPTION);
+        recipeStepShortDescription = arguments.getString(PARAM_RECIPE_STEP_SHORT_DESCRIPTION);
         recipeStepVideoUrl = arguments.getString(PARAM_RECIPE_STEP_VIDEO_URL);
         recipeStepPictureThumbnailUrl = arguments.getString(PARAM_RECIPE_STEP_PICTURE_THUMBNAIL_URL);
         recipeStepDescription = recipeStepDescription != null ? recipeStepDescription : "";
+        recipeStepShortDescription = recipeStepShortDescription != null ? recipeStepShortDescription : "";
         recipeStepVideoUrl = recipeStepVideoUrl != null ? recipeStepVideoUrl : "";
         recipeStepPictureThumbnailUrl = recipeStepPictureThumbnailUrl != null ? recipeStepPictureThumbnailUrl : "";
 
@@ -112,14 +116,16 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_recipe_step_detail, container, false);
         simpleExoPlayerViewRecipeStepVideo = view.findViewById(R.id.simpleexoplayerview_recipe_step_video);
-        textViewRecipeStep = view.findViewById(R.id.textview_recipe_step);
+        final TextView textViewRecipeStepShortDescription = view.findViewById(R.id.textview_step_description_title);
+        final TextView textViewRecipeStep = view.findViewById(R.id.textview_recipe_step);
+        textViewRecipeStep.setText(recipeStepDescription);
+        textViewRecipeStepShortDescription.setText(recipeStepShortDescription);
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        textViewRecipeStep.setText(recipeStepDescription);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
             initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
         } else {
