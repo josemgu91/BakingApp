@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
             }
         }, false);
         if (savedInstanceState == null) {
-            final RecipesFragment recipesFragment = new RecipesFragment();
+            final RecipesFragment recipesFragment = RecipesFragment.newInstance(isTablet());
             if (isTablet()) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }

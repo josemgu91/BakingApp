@@ -27,6 +27,7 @@ package com.josemgu91.bakingapp.android.ui.recipes_list;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -44,6 +45,10 @@ import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
 
 public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<GetRecipesViewModel> {
 
+    private static final String PARAM_USE_GRID_LAYOUT = "use_grid_layout";
+
+    private boolean useGridLayout;
+
     private RecipesRecyclerViewAdapter recipesRecyclerViewAdapter;
 
     private OnRecipeSelectedListener onRecipeSelectedListener;
@@ -58,9 +63,22 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
         this.onRecipeSelectedListener = onRecipeSelectedListener;
     }
 
+    public static RecipesFragment newInstance(final boolean useGridLayout) {
+        RecipesFragment fragment = new RecipesFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putBoolean(PARAM_USE_GRID_LAYOUT, useGridLayout);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Bundle arguments = getArguments();
+        if (!arguments.containsKey(PARAM_USE_GRID_LAYOUT)) {
+            throw new RuntimeException("Use the newInstance() static method instead the standard constructor!");
+        }
+        useGridLayout = arguments.getBoolean(PARAM_USE_GRID_LAYOUT);
         getRecipesController = new ControllerFactoryImpl(getActivity()).createGetRecipesController(this);
     }
 
@@ -80,7 +98,11 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
                 }
             }
         });
-        recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if (useGridLayout) {
+            recyclerViewRecipes.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        } else {
+            recyclerViewRecipes.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
         recyclerViewRecipes.setAdapter(recipesRecyclerViewAdapter);
         return view;
     }
