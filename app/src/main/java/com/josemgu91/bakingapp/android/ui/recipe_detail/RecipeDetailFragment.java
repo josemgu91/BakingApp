@@ -27,6 +27,8 @@ package com.josemgu91.bakingapp.android.ui.recipe_detail;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +39,7 @@ import android.view.ViewGroup;
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeIngredientsViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
+import com.josemgu91.bakingapp.android.test.SimpleIdlingResource;
 import com.josemgu91.bakingapp.android.ui.ControllerFactory;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
 
@@ -77,9 +80,23 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
         this.onStepSelectedListener = onStepSelectedListener;
     }
 
+    @Nullable
+    private SimpleIdlingResource simpleIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (simpleIdlingResource == null) {
+            simpleIdlingResource = new SimpleIdlingResource();
+        }
+        return simpleIdlingResource;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        simpleIdlingResource = (SimpleIdlingResource) getIdlingResource();
+        simpleIdlingResource.setIdleState(false);
         final ControllerFactory controllerFactory = new ControllerFactoryImpl(getActivity());
         recipeDetailViewInterfaceAdapter = new RecipeDetailViewInterfaceAdapter(controllerFactory, this);
     }
@@ -197,6 +214,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
         progressBarRecipeDetailRetrievingProgress.setVisibility(View.GONE);
         errorViewErrorMessage.setVisibility(View.GONE);
         recyclerViewRecipeDetail.setVisibility(View.VISIBLE);
+        simpleIdlingResource.setIdleState(true);
     }
 
     public interface OnStepSelectedListener {
