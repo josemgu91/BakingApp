@@ -44,9 +44,9 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
 
     public final static String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
 
-    private final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
-    private final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
-    private final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
+    public final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
+    public final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
+    public final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
 
     private FragmentManager fragmentManager;
 
@@ -73,10 +73,6 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
         verifyIntentAndShowRecipe(getIntent());
     }
 
-    private boolean isTablet() {
-        return getResources().getConfiguration().smallestScreenWidthDp >= 600;
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -88,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
             onRecipeSelected(intent.getStringExtra(PARAM_RECIPE_ID));
             getIntent().removeExtra(PARAM_RECIPE_ID);
         }
+    }
+
+    private boolean isTablet() {
+        return getResources().getConfiguration().smallestScreenWidthDp >= 600;
     }
 
     private void registerFragmentListener(final Fragment fragment) {

@@ -45,8 +45,8 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
 
     public static final String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
 
-    private final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
-    private final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
+    public final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
+    public final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
 
     private FragmentManager fragmentManager;
 
