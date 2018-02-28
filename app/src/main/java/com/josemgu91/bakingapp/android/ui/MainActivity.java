@@ -25,7 +25,9 @@
 package com.josemgu91.bakingapp.android.ui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -63,13 +65,16 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
         }, false);
         if (savedInstanceState == null) {
             final RecipesFragment recipesFragment = new RecipesFragment();
-            fragmentManager
-                    .beginTransaction()
-                    .setReorderingAllowed(true)
-                    .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
-                    .commit();
+            if (isTablet()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+            replaceFragment(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT, false);
         }
         verifyIntentAndShowRecipe(getIntent());
+    }
+
+    private boolean isTablet() {
+        return getResources().getConfiguration().smallestScreenWidthDp >= 600;
     }
 
     @Override
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
     private void verifyIntentAndShowRecipe(final Intent intent) {
         if (intent.hasExtra(PARAM_RECIPE_ID)) {
             onRecipeSelected(intent.getStringExtra(PARAM_RECIPE_ID));
+            getIntent().removeExtra(PARAM_RECIPE_ID);
         }
     }
 
@@ -97,23 +103,44 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
 
     @Override
     public void onRecipeSelected(String recipeId) {
-        fragmentManager.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .setReorderingAllowed(true)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.fragment, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
-                .commit();
+        if (isTablet()) {
+            startActivity(
+                    new Intent(this, DetailActivity.class)
+                            .putExtra(DetailActivity.PARAM_RECIPE_ID, recipeId)
+            );
+        } else {
+            replaceFragment(R.id.fragment, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
+        }
     }
 
     @Override
     public void onStepSelected(GetRecipeStepsViewModel.Step step) {
-        fragmentManager.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .setReorderingAllowed(true)
-                .addToBackStack(null)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .replace(R.id.fragment, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
+        replaceFragment(R.id.fragment, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT);
+    }
+
+    private void replaceFragment(@IdRes final int containerId,
+                                 final Fragment fragment,
+                                 final String fragmentTag) {
+        replaceFragment(containerId, fragment, fragmentTag, true);
+    }
+
+    private void replaceFragment(@IdRes final int containerId,
+                                 final Fragment fragment,
+                                 final String fragmentTag,
+                                 final boolean addToBackStack) {
+        final FragmentTransaction fragmentTransaction = createBaseTransaction(addToBackStack);
+        fragmentTransaction
+                .replace(containerId, fragment, fragmentTag)
                 .commit();
+    }
+
+    private FragmentTransaction createBaseTransaction(final boolean addToBackStack) {
+        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setReorderingAllowed(true);
+        if (addToBackStack) {
+            fragmentTransaction.addToBackStack(null);
+        }
+        return fragmentTransaction;
     }
 }
