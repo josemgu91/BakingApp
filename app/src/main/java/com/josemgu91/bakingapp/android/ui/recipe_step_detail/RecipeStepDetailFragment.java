@@ -28,14 +28,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -120,7 +125,39 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         final TextView textViewRecipeStep = view.findViewById(R.id.textview_recipe_step);
         textViewRecipeStep.setText(recipeStepDescription);
         textViewRecipeStepShortDescription.setText(recipeStepShortDescription);
+        setVideoLandscapePhoneSize(view);
         return view;
+    }
+
+    private void setVideoLandscapePhoneSize(final View view) {
+        final Configuration configuration = getActivity().getResources().getConfiguration();
+        view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (configuration.smallestScreenWidthDp < 600 && configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    final ViewGroup.LayoutParams layoutParams = simpleExoPlayerViewRecipeStepVideo.getLayoutParams();
+                    layoutParams.height = getUsableHeight();
+                    simpleExoPlayerViewRecipeStepVideo.setLayoutParams(layoutParams);
+                    view.getViewTreeObserver().removeOnPreDrawListener(this);
+                }
+                return true;
+            }
+        });
+    }
+
+    private int getUsableHeight() {
+        final Point size = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+        int usableHeight = size.y;
+        final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            usableHeight -= actionBar.getHeight();
+        }
+        int resource = getActivity().getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resource > 0) {
+            usableHeight -= getActivity().getResources().getDimensionPixelSize(resource);
+        }
+        return usableHeight;
     }
 
     @Override
