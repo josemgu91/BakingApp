@@ -21,54 +21,41 @@
   ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   ~ SOFTWARE.
   -->
-
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:padding="@dimen/content_margin">
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-        android:id="@+id/simpleexoplayerview_recipe_step_video"
-        android:layout_width="0dp"
-        android:layout_height="240dp"
-        android:background="@android:color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:resize_mode="fit" />
-
-    <TextView
-        android:id="@+id/textview_step_description_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/recipe_step_detail_header_step_description"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/simpleexoplayerview_recipe_step_video" />
+        android:orientation="vertical">
 
-    <View
-        android:id="@+id/view_divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/list_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textview_step_description_title" />
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/simpleexoplayerview_recipe_step_video"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video_player_height"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/black"
+            app:resize_mode="fit" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_divider">
+        <TextView
+            android:id="@+id/textview_step_description_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recipe_step_detail_header_step_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/list_divider" />
 
         <TextView
             android:id="@+id/textview_recipe_step"
@@ -77,7 +64,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/primaryTextColor"
             tools:text="This is the step instruction." />
+    </LinearLayout>
 
-    </ScrollView>
-
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -30,7 +30,7 @@ import android.widget.RemoteViews;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
-import com.josemgu91.bakingapp.android.ui.MainActivity;
+import com.josemgu91.bakingapp.android.ui.RecipesListActivity;
 
 import java.util.List;
 
@@ -89,7 +89,7 @@ public class RemoteViewsService extends android.widget.RemoteViewsService {
             remoteViewsRecipe.setOnClickFillInIntent(
                     R.id.linearlayout_recipe_element,
                     new Intent()
-                            .putExtra(MainActivity.PARAM_RECIPE_ID, recipe.getId())
+                            .putExtra(RecipesListActivity.PARAM_RECIPE_ID, recipe.getId())
             );
             remoteViewsRecipe.setTextViewText(R.id.textview_recipe_name, recipe.getName());
             remoteViewsRecipe.setTextViewText(R.id.textview_recipe_servings, context.getString(R.string.widget_recipe_servings, recipe.getServings()));

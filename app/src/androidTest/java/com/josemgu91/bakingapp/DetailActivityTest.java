@@ -35,8 +35,8 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.josemgu91.bakingapp.android.ui.DetailActivity;
-import com.josemgu91.bakingapp.android.ui.MainActivity;
+import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
+import com.josemgu91.bakingapp.android.ui.RecipesListActivity;
 import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
 
 import org.junit.Assert;
@@ -55,12 +55,12 @@ public class DetailActivityTest {
     private IdlingResource idlingResource;
 
     @Rule
-    public ActivityTestRule<DetailActivity> detailActivityTestRule = new ActivityTestRule<>(DetailActivity.class, false, false);
+    public ActivityTestRule<RecipeDetailActivity> detailActivityTestRule = new ActivityTestRule<>(RecipeDetailActivity.class, false, false);
 
     @Before
     public void putTestIntentExtraValues() {
         final Intent launchIntent = new Intent()
-                .putExtra(DetailActivity.PARAM_RECIPE_ID, "1");
+                .putExtra(RecipeDetailActivity.PARAM_RECIPE_ID, "1");
         detailActivityTestRule.launchActivity(launchIntent);
     }
 
@@ -77,7 +77,7 @@ public class DetailActivityTest {
                 detailActivityTestRule
                         .getActivity()
                         .getSupportFragmentManager()
-                        .findFragmentByTag(MainActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
+                        .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
                         != null);
         unregisterIdlingResource();
     }
@@ -86,7 +86,7 @@ public class DetailActivityTest {
         final RecipeDetailFragment recipeDetailFragment = (RecipeDetailFragment) detailActivityTestRule
                 .getActivity()
                 .getSupportFragmentManager()
-                .findFragmentByTag(MainActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
+                .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
         idlingResource = recipeDetailFragment.getIdlingResource();
         IdlingRegistry.getInstance().register(idlingResource);
     }

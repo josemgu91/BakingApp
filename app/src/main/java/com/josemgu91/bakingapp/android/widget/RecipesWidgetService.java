@@ -43,7 +43,7 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
-import com.josemgu91.bakingapp.android.ui.MainActivity;
+import com.josemgu91.bakingapp.android.ui.RecipesListActivity;
 
 /**
  * Created by jose on 2/21/18.
@@ -114,7 +114,7 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
                 PendingIntent.getActivity(
                         this,
                         1,
-                        new Intent(this, MainActivity.class),
+                        new Intent(this, RecipesListActivity.class),
                         PendingIntent.FLAG_UPDATE_CURRENT
                 )
         );

@@ -25,9 +25,7 @@
 package com.josemgu91.bakingapp.android.ui;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -35,20 +33,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.josemgu91.bakingapp.R;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
-import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
-import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFragment;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
-public class MainActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener, RecipeDetailFragment.OnStepSelectedListener {
+public class RecipesListActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener {
 
     public final static String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
 
     public final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
-    public final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
-    public final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
-
-    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
         setContentView(R.layout.activity_main);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        fragmentManager = getSupportFragmentManager();
+        final FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
             @Override
             public void onFragmentResumed(FragmentManager fm, Fragment f) {
@@ -65,21 +56,23 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
         }, false);
         if (savedInstanceState == null) {
             final RecipesFragment recipesFragment = RecipesFragment.newInstance(isTablet());
-            if (isTablet()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-            replaceFragment(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT, false);
+            fragmentManager.beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
+                    .commit();
         }
-        verifyIntentAndShowRecipe(getIntent());
+        processIntent(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        verifyIntentAndShowRecipe(intent);
+        processIntent(intent);
     }
 
-    private void verifyIntentAndShowRecipe(final Intent intent) {
+    private void processIntent(final Intent intent) {
         if (intent.hasExtra(PARAM_RECIPE_ID)) {
             onRecipeSelected(intent.getStringExtra(PARAM_RECIPE_ID));
             getIntent().removeExtra(PARAM_RECIPE_ID);
@@ -95,52 +88,15 @@ public class MainActivity extends AppCompatActivity implements RecipesFragment.O
             case FRAGMENT_TAG_RECIPES_FRAGMENT:
                 ((RecipesFragment) fragment).setOnRecipeSelectedListener(this);
                 break;
-            case FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT:
-                ((RecipeDetailFragment) fragment).setOnStepSelectedListener(this);
-                break;
         }
     }
 
     @Override
     public void onRecipeSelected(String recipeId) {
-        if (isTablet()) {
-            startActivity(
-                    new Intent(this, DetailActivity.class)
-                            .putExtra(DetailActivity.PARAM_RECIPE_ID, recipeId)
-            );
-        } else {
-            replaceFragment(R.id.fragment, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
-        }
+        startActivity(
+                new Intent(this, RecipeDetailActivity.class)
+                        .putExtra(RecipeDetailActivity.PARAM_RECIPE_ID, recipeId)
+        );
     }
 
-    @Override
-    public void onStepSelected(GetRecipeStepsViewModel.Step step) {
-        replaceFragment(R.id.fragment, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT);
-    }
-
-    private void replaceFragment(@IdRes final int containerId,
-                                 final Fragment fragment,
-                                 final String fragmentTag) {
-        replaceFragment(containerId, fragment, fragmentTag, true);
-    }
-
-    private void replaceFragment(@IdRes final int containerId,
-                                 final Fragment fragment,
-                                 final String fragmentTag,
-                                 final boolean addToBackStack) {
-        final FragmentTransaction fragmentTransaction = createBaseTransaction(addToBackStack);
-        fragmentTransaction
-                .replace(containerId, fragment, fragmentTag)
-                .commit();
-    }
-
-    private FragmentTransaction createBaseTransaction(final boolean addToBackStack) {
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .setReorderingAllowed(true);
-        if (addToBackStack) {
-            fragmentTransaction.addToBackStack(null);
-        }
-        return fragmentTransaction;
-    }
 }

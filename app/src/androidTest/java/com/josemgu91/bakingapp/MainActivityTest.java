@@ -36,8 +36,8 @@ import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.josemgu91.bakingapp.android.ui.DetailActivity;
-import com.josemgu91.bakingapp.android.ui.MainActivity;
+import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
+import com.josemgu91.bakingapp.android.ui.RecipesListActivity;
 import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
@@ -57,7 +57,7 @@ public class MainActivityTest {
     private IdlingResource idlingResource;
 
     @Rule
-    public IntentsTestRule<MainActivity> mainActivityTestRule = new IntentsTestRule<>(MainActivity.class);
+    public IntentsTestRule<RecipesListActivity> mainActivityTestRule = new IntentsTestRule<>(RecipesListActivity.class);
 
     @Test
     public void clickRecipeElementOpensDetail() {
@@ -67,8 +67,8 @@ public class MainActivityTest {
         if (isInTablet()) {
             Intents.intended(
                     Matchers.allOf(
-                            IntentMatchers.hasComponent(DetailActivity.class.getName()),
-                            IntentMatchers.hasExtraWithKey(DetailActivity.PARAM_RECIPE_ID)
+                            IntentMatchers.hasComponent(RecipeDetailActivity.class.getName()),
+                            IntentMatchers.hasExtraWithKey(RecipeDetailActivity.PARAM_RECIPE_ID)
                     )
             );
         } else {
@@ -76,7 +76,7 @@ public class MainActivityTest {
                     mainActivityTestRule
                             .getActivity()
                             .getSupportFragmentManager()
-                            .findFragmentByTag(MainActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
+                            .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
                             != null);
         }
         unregisterIdlingResource();
@@ -99,7 +99,7 @@ public class MainActivityTest {
                     mainActivityTestRule
                             .getActivity()
                             .getSupportFragmentManager()
-                            .findFragmentByTag(MainActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
+                            .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
                             != null);
             unregisterIdlingResource();
         }
@@ -115,7 +115,7 @@ public class MainActivityTest {
         final RecipesFragment recipesFragment = (RecipesFragment) mainActivityTestRule
                 .getActivity()
                 .getSupportFragmentManager()
-                .findFragmentByTag(MainActivity.FRAGMENT_TAG_RECIPES_FRAGMENT);
+                .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPES_FRAGMENT);
         idlingResource = recipesFragment.getIdlingResource();
         IdlingRegistry.getInstance().register(idlingResource);
     }
@@ -124,7 +124,7 @@ public class MainActivityTest {
         final RecipeDetailFragment recipeDetailFragment = (RecipeDetailFragment) mainActivityTestRule
                 .getActivity()
                 .getSupportFragmentManager()
-                .findFragmentByTag(MainActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
+                .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
         idlingResource = recipeDetailFragment.getIdlingResource();
         IdlingRegistry.getInstance().register(idlingResource);
     }

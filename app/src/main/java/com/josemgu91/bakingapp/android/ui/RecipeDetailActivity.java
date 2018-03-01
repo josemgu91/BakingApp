@@ -41,7 +41,7 @@ import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFra
  * Created by jose on 2/27/18.
  */
 
-public class DetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepSelectedListener {
+public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepSelectedListener {
 
     public static final String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
 
@@ -75,6 +75,10 @@ public class DetailActivity extends AppCompatActivity implements RecipeDetailFra
                 throw new IllegalStateException("Must have the RECIPE_ID parameter!");
             }
         }
+    }
+
+    private boolean isInTwoPaneMode(){
+        return findViewById(R.id.fragment_menu) != null;
     }
 
     private void registerFragmentListener(final Fragment fragment) {
