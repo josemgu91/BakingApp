@@ -56,9 +56,8 @@ public class RecipesListActivity extends AppCompatActivity implements RecipesFra
         }, false);
         if (savedInstanceState == null) {
             final RecipesFragment recipesFragment = RecipesFragment.newInstance(isTablet());
-            fragmentManager.beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .setReorderingAllowed(true)
+            fragmentManager
+                    .beginTransaction()
                     .addToBackStack(null)
                     .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
                     .commit();

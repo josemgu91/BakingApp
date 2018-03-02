@@ -32,13 +32,12 @@
     <include layout="@layout/toolbar" />
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <FrameLayout
-            android:id="@+id/fragment_menu"
+            android:id="@+id/fragment_pane_1"
             android:layout_width="@dimen/menu_pane_width"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -46,12 +45,12 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
-            android:id="@+id/fragment_content"
+            android:id="@+id/fragment_pane_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/fragment_menu"
+            app:layout_constraintStart_toEndOf="@+id/fragment_pane_1"
             app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

@@ -24,7 +24,6 @@
 
 package com.josemgu91.bakingapp.android.ui;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -53,7 +52,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_detail);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,12 +62,14 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                 registerFragmentListener(f);
             }
         }, false);
+        final Fragment recipeDetailFragment;
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(PARAM_RECIPE_ID)) {
                 final String recipeId = getIntent().getStringExtra(PARAM_RECIPE_ID);
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_menu, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
+                recipeDetailFragment = RecipeDetailFragment.newInstance(recipeId);
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_pane_1, recipeDetailFragment, FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
                         .commit();
             } else {
                 throw new IllegalStateException("Must have the RECIPE_ID parameter!");
@@ -77,8 +77,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         }
     }
 
-    private boolean isInTwoPaneMode(){
-        return findViewById(R.id.fragment_menu) != null;
+    private boolean isInTwoPaneMode() {
+        return findViewById(R.id.fragment_pane_2) != null;
     }
 
     private void registerFragmentListener(final Fragment fragment) {
@@ -91,8 +91,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
     @Override
     public void onStepSelected(GetRecipeStepsViewModel.Step step) {
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_content, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
-                .commit();
+        if (isInTwoPaneMode()) {
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_pane_2, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
+                    .commit();
+        } else {
+
+        }
     }
 }
