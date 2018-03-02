@@ -24,6 +24,7 @@
 
 package com.josemgu91.bakingapp.android.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,7 @@ import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFra
 public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepSelectedListener {
 
     public static final String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
+    public static final String PARAM_RECIPE_NAME = "com.josemgu91.bakingapp.RECIPE_NAME";
 
     public final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
     public final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
@@ -59,6 +61,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getIntent().getStringExtra(PARAM_RECIPE_NAME));
         }
         fragmentManager = getSupportFragmentManager();
         fragmentManager.registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
@@ -87,6 +90,14 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                 }
             }
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        getIntent().putExtra(PARAM_RECIPE_ID, intent.getStringExtra(PARAM_RECIPE_ID));
+        getIntent().putExtra(PARAM_RECIPE_NAME, intent.getStringExtra(PARAM_RECIPE_NAME));
+        recreate();
     }
 
     private boolean isInTwoPaneMode() {

@@ -112,7 +112,7 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
             @Override
             public void onRecipeSelected(GetRecipesViewModel.Recipe recipe) {
                 if (onRecipeSelectedListener != null) {
-                    onRecipeSelectedListener.onRecipeSelected(recipe.getId());
+                    onRecipeSelectedListener.onRecipeSelected(recipe);
                 }
             }
         });
@@ -164,7 +164,7 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
 
     public interface OnRecipeSelectedListener {
 
-        void onRecipeSelected(final String recipeId);
+        void onRecipeSelected(final GetRecipesViewModel.Recipe recipe);
 
     }
 

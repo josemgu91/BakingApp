@@ -32,11 +32,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.josemgu91.bakingapp.R;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
 public class RecipesListActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener {
-
-    public final static String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
 
     public final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
 
@@ -60,20 +59,6 @@ public class RecipesListActivity extends AppCompatActivity implements RecipesFra
                     .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
                     .commit();
         }
-        processIntent(getIntent());
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        processIntent(intent);
-    }
-
-    private void processIntent(final Intent intent) {
-        if (intent.hasExtra(PARAM_RECIPE_ID)) {
-            onRecipeSelected(intent.getStringExtra(PARAM_RECIPE_ID));
-            getIntent().removeExtra(PARAM_RECIPE_ID);
-        }
     }
 
     private boolean isTablet() {
@@ -89,10 +74,11 @@ public class RecipesListActivity extends AppCompatActivity implements RecipesFra
     }
 
     @Override
-    public void onRecipeSelected(String recipeId) {
+    public void onRecipeSelected(final GetRecipesViewModel.Recipe recipe) {
         startActivity(
                 new Intent(this, RecipeDetailActivity.class)
-                        .putExtra(RecipeDetailActivity.PARAM_RECIPE_ID, recipeId)
+                        .putExtra(RecipeDetailActivity.PARAM_RECIPE_ID, recipe.getId())
+                        .putExtra(RecipeDetailActivity.PARAM_RECIPE_NAME, recipe.getName())
         );
     }
 
