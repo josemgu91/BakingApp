@@ -67,17 +67,24 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                 registerFragmentListener(f);
             }
         }, false);
-        final Fragment recipeDetailFragment;
         if (savedInstanceState == null) {
             if (getIntent().hasExtra(PARAM_RECIPE_ID)) {
                 final String recipeId = getIntent().getStringExtra(PARAM_RECIPE_ID);
-                recipeDetailFragment = RecipeDetailFragment.newInstance(recipeId);
                 fragmentManager
                         .beginTransaction()
-                        .replace(R.id.fragment_pane_1, recipeDetailFragment, FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
+                        .replace(R.id.fragment_pane_1, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
                         .commit();
             } else {
                 throw new IllegalStateException("Must have the RECIPE_ID parameter!");
+            }
+        } else {
+            final Fragment recipeStepDetailFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT);
+            if (recipeStepDetailFragment != null) {
+                if (isInTwoPaneMode()) {
+                    recipeStepDetailFragment.setUserVisibleHint(true);
+                } else {
+                    recipeStepDetailFragment.setUserVisibleHint(false);
+                }
             }
         }
     }

@@ -82,6 +82,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private IntentFilter noisyReceiverIntentFilter;
 
     private boolean hasVideo;
+
     private long lastVideoPosition;
 
     /*
@@ -182,19 +183,25 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onStop() {
         super.onStop();
         if (hasVideo) {
-            getActivity().unregisterReceiver(noisyReceiver);
-            simpleExoPlayer.setPlayWhenReady(false);
-            simpleExoPlayer.stop();
-            simpleExoPlayer.release();
-            simpleExoPlayer = null;
-            mediaFocusManager.abandonAudioFocus();
+            releaseVideoResources();
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, simpleExoPlayer.getCurrentPosition());
+        if (hasVideo) {
+            outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, simpleExoPlayer.getCurrentPosition());
+        }
+    }
+
+    private void releaseVideoResources() {
+        getActivity().unregisterReceiver(noisyReceiver);
+        simpleExoPlayer.setPlayWhenReady(false);
+        simpleExoPlayer.stop();
+        simpleExoPlayer.release();
+        simpleExoPlayer = null;
+        mediaFocusManager.abandonAudioFocus();
     }
 
     private void initializeNoisyReceiver() {
@@ -221,11 +228,11 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
             ).createMediaSource(Uri.parse(uri));
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector());
             simpleExoPlayer.prepare(mediaSource);
-            simpleExoPlayer.setPlayWhenReady(autoPlay);
             simpleExoPlayer.addListener(new CustomExoPlayerEventListener(this));
             if (lastVideoPosition > 0) {
                 simpleExoPlayer.seekTo(lastVideoPosition);
             }
+            simpleExoPlayer.setPlayWhenReady(autoPlay && getUserVisibleHint());
             simpleExoPlayerViewRecipeStepVideo.setPlayer(simpleExoPlayer);
         }
     }
