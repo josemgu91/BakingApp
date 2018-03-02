@@ -27,12 +27,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".android.ui.RecipeDetailActivity">
+    tools:context=".android.ui.RecipeStepDetailActivity">
 
     <include layout="@layout/toolbar" />
 
     <FrameLayout
-        android:id="@+id/fragment_pane_1"
+        android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

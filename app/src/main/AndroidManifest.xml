@@ -47,6 +47,8 @@
 
         <activity android:name=".android.ui.RecipeDetailActivity" />
 
+        <activity android:name=".android.ui.RecipeStepDetailActivity" />
+
         <receiver android:name=".android.widget.RecipesWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

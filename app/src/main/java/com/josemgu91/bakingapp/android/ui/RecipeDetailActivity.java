@@ -97,7 +97,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                     .replace(R.id.fragment_pane_2, RecipeStepDetailFragment.newInstance(step), FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
                     .commit();
         } else {
-
+            RecipeStepDetailActivity.start(this, step);
         }
     }
 }
