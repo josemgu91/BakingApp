@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -62,6 +63,10 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_step_detail);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         final FragmentManager fragmentManager = getSupportFragmentManager();
         if (savedInstanceState == null) {
             final GetRecipeStepsViewModel.Step step = getRecipeStepDetailFromIntent();

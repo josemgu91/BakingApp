@@ -28,7 +28,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -58,7 +57,6 @@ public class RecipesListActivity extends AppCompatActivity implements RecipesFra
             final RecipesFragment recipesFragment = RecipesFragment.newInstance(isTablet());
             fragmentManager
                     .beginTransaction()
-                    .addToBackStack(null)
                     .replace(R.id.fragment, recipesFragment, FRAGMENT_TAG_RECIPES_FRAGMENT)
                     .commit();
         }

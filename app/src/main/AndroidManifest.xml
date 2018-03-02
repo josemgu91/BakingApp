@@ -45,9 +45,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".android.ui.RecipeDetailActivity" />
+        <activity
+            android:name=".android.ui.RecipeDetailActivity"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".android.ui.RecipesListActivity" />
 
-        <activity android:name=".android.ui.RecipeStepDetailActivity" />
+        <activity
+            android:name=".android.ui.RecipeStepDetailActivity"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".android.ui.RecipeDetailActivity" />
 
         <receiver android:name=".android.widget.RecipesWidgetProvider">
             <intent-filter>
