@@ -68,6 +68,8 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private static final String PARAM_RECIPE_STEP_VIDEO_URL = "recipe_step_video_url";
     private static final String PARAM_RECIPE_STEP_PICTURE_THUMBNAIL_URL = "recipe_step_picture_thumbnail_url";
 
+    private static final String SAVED_INSTANCE_STATE_VIDEO_POSITION = "video_position";
+
     private String recipeStepDescription;
     private String recipeStepShortDescription;
     private String recipeStepVideoUrl;
@@ -80,6 +82,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private IntentFilter noisyReceiverIntentFilter;
 
     private boolean hasVideo;
+    private long lastVideoPosition;
 
     /*
      * TODO: Maybe I can make a local Android parcelable view model,
@@ -111,6 +114,10 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         recipeStepShortDescription = recipeStepShortDescription != null ? recipeStepShortDescription : "";
         recipeStepVideoUrl = recipeStepVideoUrl != null ? recipeStepVideoUrl : "";
         recipeStepPictureThumbnailUrl = recipeStepPictureThumbnailUrl != null ? recipeStepPictureThumbnailUrl : "";
+
+        if (savedInstanceState != null) {
+            lastVideoPosition = savedInstanceState.getLong(SAVED_INSTANCE_STATE_VIDEO_POSITION);
+        }
 
         mediaFocusManager = new MediaFocusManager(getActivity(), this);
         initializeNoisyReceiver();
@@ -161,20 +168,13 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
-            initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
-        } else {
-            simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
-        if (hasVideo) {
+        if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
+            initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
             getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+        } else {
+            simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
         }
     }
 
@@ -184,19 +184,17 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         if (hasVideo) {
             getActivity().unregisterReceiver(noisyReceiver);
             simpleExoPlayer.setPlayWhenReady(false);
-            mediaFocusManager.abandonAudioFocus();
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (hasVideo) {
             simpleExoPlayer.stop();
             simpleExoPlayer.release();
             simpleExoPlayer = null;
             mediaFocusManager.abandonAudioFocus();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, simpleExoPlayer.getCurrentPosition());
     }
 
     private void initializeNoisyReceiver() {
@@ -225,6 +223,9 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
             simpleExoPlayer.prepare(mediaSource);
             simpleExoPlayer.setPlayWhenReady(autoPlay);
             simpleExoPlayer.addListener(new CustomExoPlayerEventListener(this));
+            if (lastVideoPosition > 0) {
+                simpleExoPlayer.seekTo(lastVideoPosition);
+            }
             simpleExoPlayerViewRecipeStepVideo.setPlayer(simpleExoPlayer);
         }
     }
