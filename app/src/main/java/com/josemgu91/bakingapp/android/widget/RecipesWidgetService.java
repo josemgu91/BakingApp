@@ -29,6 +29,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Build;
@@ -111,10 +112,14 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
         remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
         remoteViews.setPendingIntentTemplate(
                 R.id.listview_recipes,
-                PendingIntent.getActivity(
+                PendingIntent.getActivities(
                         this,
                         1,
-                        new Intent(this, RecipeDetailActivity.class),
+                        TaskStackBuilder
+                                .create(this)
+                                .addParentStack(RecipeDetailActivity.class)
+                                .addNextIntent(new Intent(this, RecipeDetailActivity.class))
+                                .getIntents(),
                         PendingIntent.FLAG_UPDATE_CURRENT
                 )
         );
