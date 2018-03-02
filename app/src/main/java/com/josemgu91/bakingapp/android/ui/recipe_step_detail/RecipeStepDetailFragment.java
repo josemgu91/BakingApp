@@ -85,10 +85,6 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
 
     private long lastVideoPosition;
 
-    /*
-     * TODO: Maybe I can make a local Android parcelable view model,
-     * but I think that for the moment this is good enough.
-     */
     public static RecipeStepDetailFragment newInstance(final GetRecipeStepsViewModel.Step recipeStep) {
         final RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
         final Bundle arguments = new Bundle();
@@ -183,6 +179,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onStop() {
         super.onStop();
         if (hasVideo) {
+            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
             releaseVideoResources();
         }
     }
@@ -191,7 +188,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (hasVideo) {
-            outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, simpleExoPlayer.getCurrentPosition());
+            outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, lastVideoPosition);
         }
     }
 

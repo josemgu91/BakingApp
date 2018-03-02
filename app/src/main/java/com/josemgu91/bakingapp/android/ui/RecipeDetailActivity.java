@@ -50,10 +50,17 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     public final static String FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT = "recipe_detail_fragment";
     public final static String FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT = "recipe_step_detail_fragment";
 
+    public final static String SAVED_INSTANCE_STATE_USE_SAVED_INSTANCE_STATE = "use_saved_instance_state";
+
     private FragmentManager fragmentManager;
+
+    private boolean useSavedInstanceState = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        if (savedInstanceState != null && !savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_USE_SAVED_INSTANCE_STATE)) {
+            savedInstanceState = null;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -95,9 +102,21 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        getIntent().putExtra(PARAM_RECIPE_ID, intent.getStringExtra(PARAM_RECIPE_ID));
-        getIntent().putExtra(PARAM_RECIPE_NAME, intent.getStringExtra(PARAM_RECIPE_NAME));
-        recreate();
+        final String recipeId = intent.getStringExtra(PARAM_RECIPE_ID);
+        final String recipeName = intent.getStringExtra(PARAM_RECIPE_NAME);
+        if (!recipeId.equals(getIntent().getStringExtra(PARAM_RECIPE_ID)) &&
+                !recipeName.equals(getIntent().getStringExtra(PARAM_RECIPE_NAME))) {
+            getIntent().putExtra(PARAM_RECIPE_ID, recipeId);
+            getIntent().putExtra(PARAM_RECIPE_NAME, recipeName);
+            useSavedInstanceState = false;
+            recreate();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_INSTANCE_STATE_USE_SAVED_INSTANCE_STATE, useSavedInstanceState);
     }
 
     private boolean isInTwoPaneMode() {
