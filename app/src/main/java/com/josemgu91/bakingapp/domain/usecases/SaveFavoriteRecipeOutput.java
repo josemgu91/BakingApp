@@ -22,37 +22,27 @@
  * SOFTWARE.
  */
 
-package com.josemgu91.bakingapp.domain.usecases.common;
-
-import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
-import com.josemgu91.bakingapp.domain.util.OutputMapper;
+package com.josemgu91.bakingapp.domain.usecases;
 
 /**
  * Created by jose on 3/3/18.
  */
 
-public abstract class AbstractSaveUseCase<Result, Output> {
+public class SaveFavoriteRecipeOutput {
 
-    private final SaveUseCaseOutput<Output> saveUseCaseOutput;
-    private final OutputMapper<Result, Output> outputMapper;
+    private final boolean saveSuccessful;
+    private final String recipeId;
 
-    public AbstractSaveUseCase(SaveUseCaseOutput<Output> saveUseCaseOutput, OutputMapper<Result, Output> outputMapper) {
-        this.saveUseCaseOutput = saveUseCaseOutput;
-        this.outputMapper = outputMapper;
+    public SaveFavoriteRecipeOutput(boolean saveSuccessful, String recipeId) {
+        this.saveSuccessful = saveSuccessful;
+        this.recipeId = recipeId;
     }
 
-    public void execute() {
-        try {
-            saveUseCaseOutput.showInProgress();
-            final Result result = saveData();
-            final Output output = outputMapper.map(result);
-            saveUseCaseOutput.showResult(output);
-        } catch (DataGatewayException e) {
-            e.printStackTrace();
-            saveUseCaseOutput.showError();
-        }
+    public boolean isSaveSuccessful() {
+        return saveSuccessful;
     }
 
-    protected abstract Result saveData() throws DataGatewayException;
-
+    public String getRecipeId() {
+        return recipeId;
+    }
 }
