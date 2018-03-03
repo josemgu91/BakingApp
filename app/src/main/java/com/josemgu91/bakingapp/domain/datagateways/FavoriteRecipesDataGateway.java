@@ -22,14 +22,22 @@
  * SOFTWARE.
  */
 
-package com.josemgu91.bakingapp.domain.usecases.common;
+package com.josemgu91.bakingapp.domain.datagateways;
+
+import com.josemgu91.bakingapp.domain.entities.Recipe;
+
+import java.util.List;
 
 /**
- * Created by jose on 2/14/18.
+ * Created by jose on 3/3/18.
  */
 
-public interface GetUseCaseOutput<Output> extends UseCaseOutput<Output> {
+public interface FavoriteRecipesDataGateway {
 
-    void showNoResult();
+    boolean saveFavoriteRecipe(final String recipeId) throws DataGatewayException;
+
+    boolean deleteFavoriteRecipe(final String recipeId) throws DataGatewayException;
+
+    List<Recipe> getFavoriteRecipes() throws DataGatewayException;
 
 }

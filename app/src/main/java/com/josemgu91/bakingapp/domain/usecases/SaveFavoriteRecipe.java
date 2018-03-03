@@ -22,14 +22,11 @@
  * SOFTWARE.
  */
 
-package com.josemgu91.bakingapp.domain.usecases.common;
+package com.josemgu91.bakingapp.domain.usecases;
 
 /**
- * Created by jose on 2/14/18.
+ * Created by jose on 3/3/18.
  */
 
-public interface GetUseCaseOutput<Output> extends UseCaseOutput<Output> {
-
-    void showNoResult();
-
+public class SaveFavoriteRecipe {
 }

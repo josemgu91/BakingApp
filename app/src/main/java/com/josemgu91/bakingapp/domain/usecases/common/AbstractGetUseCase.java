@@ -55,7 +55,7 @@ public abstract class AbstractGetUseCase<Entity extends Collection, Output exten
             }
         } catch (DataGatewayException e) {
             e.printStackTrace();
-            getUseCaseOutput.showRetrieveError();
+            getUseCaseOutput.showError();
         }
     }
 

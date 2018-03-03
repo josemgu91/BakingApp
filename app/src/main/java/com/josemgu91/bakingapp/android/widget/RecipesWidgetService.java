@@ -110,6 +110,10 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
         final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class)
                 .putExtra(RemoteViewsService.PARAM_RECIPES, recipeListBundle);
         remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
+        /*
+         * TODO: I'm not so sure why this restarts the "RecipeDetailActivity"
+         * (whose launch mode is "singleTask"), instead of calling its "onNewIntent" method.
+         */
         remoteViews.setPendingIntentTemplate(
                 R.id.listview_recipes,
                 PendingIntent.getActivities(

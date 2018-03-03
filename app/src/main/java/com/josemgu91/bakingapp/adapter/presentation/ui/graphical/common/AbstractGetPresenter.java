@@ -67,7 +67,7 @@ public abstract class AbstractGetPresenter<UseCaseOutput, ViewModel> implements 
     }
 
     @Override
-    public void showRetrieveError() {
+    public void showError() {
         viewExecutor.execute(new Runnable() {
             @Override
             public void run() {

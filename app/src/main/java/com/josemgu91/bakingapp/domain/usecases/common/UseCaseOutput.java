@@ -25,11 +25,15 @@
 package com.josemgu91.bakingapp.domain.usecases.common;
 
 /**
- * Created by jose on 2/14/18.
+ * Created by jose on 3/3/18.
  */
 
-public interface GetUseCaseOutput<Output> extends UseCaseOutput<Output> {
+public interface UseCaseOutput<Output> {
 
-    void showNoResult();
+    void showResult(final Output output);
+
+    void showInProgress();
+
+    void showError();
 
 }
