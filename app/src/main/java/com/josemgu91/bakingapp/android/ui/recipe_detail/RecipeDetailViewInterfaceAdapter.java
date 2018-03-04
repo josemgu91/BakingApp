@@ -28,7 +28,7 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeIngred
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeIngredientsViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
 import com.josemgu91.bakingapp.android.ui.ControllerFactory;
 
 /**
@@ -41,7 +41,7 @@ public class RecipeDetailViewInterfaceAdapter {
     private final GetRecipeIngredientsController getRecipeIngredientsController;
 
     public RecipeDetailViewInterfaceAdapter(final ControllerFactory controllerFactory, final RecipeDetailViewInterface recipeDetailViewInterface) {
-        this.getRecipeStepsController = controllerFactory.createGetRecipeStepsController(new View<GetRecipeStepsViewModel>() {
+        this.getRecipeStepsController = controllerFactory.createGetRecipeStepsController(new GetView<GetRecipeStepsViewModel>() {
             @Override
             public void showResult(GetRecipeStepsViewModel getRecipeStepsViewModel) {
                 recipeDetailViewInterface.showSteps(getRecipeStepsViewModel);
@@ -62,7 +62,7 @@ public class RecipeDetailViewInterfaceAdapter {
                 recipeDetailViewInterface.showStepsNoResult();
             }
         });
-        this.getRecipeIngredientsController = controllerFactory.createGetRecipeIngredientsController(new View<GetRecipeIngredientsViewModel>() {
+        this.getRecipeIngredientsController = controllerFactory.createGetRecipeIngredientsController(new GetView<GetRecipeIngredientsViewModel>() {
             @Override
             public void showResult(GetRecipeIngredientsViewModel getRecipeIngredientsViewModel) {
                 recipeDetailViewInterface.showIngredients(getRecipeIngredientsViewModel);

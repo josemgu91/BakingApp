@@ -30,7 +30,7 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsC
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 
@@ -40,12 +40,12 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecip
 
 public interface ControllerFactory {
 
-    GetRecipesController createGetRecipesController(final View<GetRecipesViewModel> getRecipesViewModel);
+    GetRecipesController createGetRecipesController(final GetView<GetRecipesViewModel> getRecipesViewModel);
 
-    GetRecipeIngredientsController createGetRecipeIngredientsController(final View<GetRecipeIngredientsViewModel> getRecipeIngredientsViewModel);
+    GetRecipeIngredientsController createGetRecipeIngredientsController(final GetView<GetRecipeIngredientsViewModel> getRecipeIngredientsViewModel);
 
-    GetRecipeStepsController createGetRecipeStepsController(final View<GetRecipeStepsViewModel> getRecipeStepsViewModel);
+    GetRecipeStepsController createGetRecipeStepsController(final GetView<GetRecipeStepsViewModel> getRecipeStepsViewModel);
 
-    GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(final View<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel);
+    GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(final GetView<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel);
 
 }

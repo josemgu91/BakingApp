@@ -40,7 +40,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.josemgu91.bakingapp.R;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
@@ -50,7 +50,7 @@ import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
  * Created by jose on 2/21/18.
  */
 
-public class RecipesWidgetService extends Service implements View<GetRecipesWithIngredientsViewModel> {
+public class RecipesWidgetService extends Service implements GetView<GetRecipesWithIngredientsViewModel> {
 
     private static final int FOREGROUND_NOTIFICATION_ID = 1;
     private static final String FOREGROUND_NOTIFICATION_CHANNEL_ID = "RecipesWidgetService";

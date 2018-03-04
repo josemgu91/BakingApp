@@ -35,13 +35,14 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesPresenter;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsPresenter;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.Application;
 import com.josemgu91.bakingapp.android.executors.DefaultThreadPoolExecutor;
 import com.josemgu91.bakingapp.android.executors.UiThreadExecutor;
+import com.josemgu91.bakingapp.data.local.FavoriteRepository;
 import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
 /**
@@ -53,33 +54,36 @@ public class ControllerFactoryImpl implements ControllerFactory {
     private final UiThreadExecutor uiThreadExecutor;
     private final DefaultThreadPoolExecutor defaultThreadPoolExecutor;
     private final RemoteRetrofitRepository remoteRetrofitRepository;
+    private final FavoriteRepository favoriteRepository;
 
     public ControllerFactoryImpl(Context context) {
         final Application application = (Application) context.getApplicationContext();
         this.uiThreadExecutor = application.getUiThreadExecutorInstance();
         this.defaultThreadPoolExecutor = application.getDefaultThreadPoolExecutorInstance();
         this.remoteRetrofitRepository = application.getRemoteRetrofitRepositoryInstance();
-    }
-
-    public GetRecipesController createGetRecipesController(final View<GetRecipesViewModel> getRecipesView) {
-        final GetRecipesPresenter getRecipesPresenter = new GetRecipesPresenter(getRecipesView, uiThreadExecutor);
-        return new GetRecipesController(defaultThreadPoolExecutor, getRecipesPresenter, remoteRetrofitRepository);
+        this.favoriteRepository = application.getFavoriteRepositoryInstance();
     }
 
     @Override
-    public GetRecipeIngredientsController createGetRecipeIngredientsController(View<GetRecipeIngredientsViewModel> getRecipeIngredientsViewModel) {
+    public GetRecipesController createGetRecipesController(final GetView<GetRecipesViewModel> getRecipesView) {
+        final GetRecipesPresenter getRecipesPresenter = new GetRecipesPresenter(getRecipesView, uiThreadExecutor);
+        return new GetRecipesController(defaultThreadPoolExecutor, getRecipesPresenter, remoteRetrofitRepository, favoriteRepository);
+    }
+
+    @Override
+    public GetRecipeIngredientsController createGetRecipeIngredientsController(GetView<GetRecipeIngredientsViewModel> getRecipeIngredientsViewModel) {
         final GetRecipeIngredientsPresenter getRecipeIngredientsPresenter = new GetRecipeIngredientsPresenter(getRecipeIngredientsViewModel, uiThreadExecutor);
         return new GetRecipeIngredientsController(defaultThreadPoolExecutor, getRecipeIngredientsPresenter, remoteRetrofitRepository);
     }
 
     @Override
-    public GetRecipeStepsController createGetRecipeStepsController(View<GetRecipeStepsViewModel> getRecipeStepsViewModel) {
+    public GetRecipeStepsController createGetRecipeStepsController(GetView<GetRecipeStepsViewModel> getRecipeStepsViewModel) {
         final GetRecipeStepsPresenter getRecipeStepsPresenter = new GetRecipeStepsPresenter(getRecipeStepsViewModel, uiThreadExecutor);
         return new GetRecipeStepsController(defaultThreadPoolExecutor, getRecipeStepsPresenter, remoteRetrofitRepository);
     }
 
     @Override
-    public GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(View<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel) {
+    public GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(GetView<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel) {
         final GetRecipesWithIngredientsPresenter getRecipesWithIngredientsPresenter = new GetRecipesWithIngredientsPresenter(getRecipesWithIngredientsViewModel, uiThreadExecutor);
         return new GetRecipesWithIngredientsController(defaultThreadPoolExecutor, getRecipesWithIngredientsPresenter, remoteRetrofitRepository);
     }

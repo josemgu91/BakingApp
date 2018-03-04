@@ -47,7 +47,7 @@ import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
  * Created by jose on 2/15/18.
  */
 
-public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<GetRecipesViewModel> {
+public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView<GetRecipesViewModel> {
 
     private static final String PARAM_USE_GRID_LAYOUT = "use_grid_layout";
 

@@ -26,6 +26,8 @@ package com.josemgu91.bakingapp.android;
 
 import com.josemgu91.bakingapp.android.executors.DefaultThreadPoolExecutor;
 import com.josemgu91.bakingapp.android.executors.UiThreadExecutor;
+import com.josemgu91.bakingapp.data.local.FavoriteRepository;
+import com.josemgu91.bakingapp.data.local.SqLiteFavoriteRepository;
 import com.josemgu91.bakingapp.data.remote.RemoteRetrofitRepository;
 
 /**
@@ -37,6 +39,7 @@ public class Application extends android.app.Application {
     private UiThreadExecutor uiThreadExecutor;
     private DefaultThreadPoolExecutor defaultThreadPoolExecutor;
     private RemoteRetrofitRepository remoteRetrofitRepository;
+    private FavoriteRepository favoriteRepository;
 
     @Override
     public void onCreate() {
@@ -44,6 +47,7 @@ public class Application extends android.app.Application {
         uiThreadExecutor = new UiThreadExecutor();
         defaultThreadPoolExecutor = new DefaultThreadPoolExecutor();
         remoteRetrofitRepository = new RemoteRetrofitRepository(true);
+        favoriteRepository = new FavoriteRepository(new SqLiteFavoriteRepository(this), remoteRetrofitRepository);
     }
 
     public UiThreadExecutor getUiThreadExecutorInstance() {
@@ -56,6 +60,10 @@ public class Application extends android.app.Application {
 
     public RemoteRetrofitRepository getRemoteRetrofitRepositoryInstance() {
         return remoteRetrofitRepository;
+    }
+
+    public FavoriteRepository getFavoriteRepositoryInstance() {
+        return favoriteRepository;
     }
 
 }
