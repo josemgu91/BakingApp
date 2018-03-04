@@ -51,13 +51,13 @@ public class MarkRecipeAsFavorite {
         try {
             useCaseOutput.showInProgress();
             final boolean isAlreadyFavorite = favoriteRecipesDataGateway.isFavorite(input.recipeId);
-            final boolean result;
+            final boolean markedAsFavorite;
             if (input.markAsFavorite) {
-                result = isAlreadyFavorite || favoriteRecipesDataGateway.saveFavoriteRecipe(input.recipeId);
+                markedAsFavorite = isAlreadyFavorite || favoriteRecipesDataGateway.saveFavoriteRecipe(input.recipeId);
             } else {
-                result = !isAlreadyFavorite || favoriteRecipesDataGateway.deleteFavoriteRecipe(input.recipeId);
+                markedAsFavorite = !(!isAlreadyFavorite || favoriteRecipesDataGateway.deleteFavoriteRecipe(input.recipeId));
             }
-            final MarkRecipeAsFavoriteOutput markRecipeAsFavoriteOutput = outputMapper.map(result);
+            final MarkRecipeAsFavoriteOutput markRecipeAsFavoriteOutput = outputMapper.map(markedAsFavorite);
             useCaseOutput.showResult(markRecipeAsFavoriteOutput);
         } catch (DataGatewayException e) {
             e.printStackTrace();
@@ -84,9 +84,9 @@ public class MarkRecipeAsFavorite {
         }
 
         @Override
-        public MarkRecipeAsFavoriteOutput map(Boolean aBoolean) {
+        public MarkRecipeAsFavoriteOutput map(Boolean markedAsFavorite) {
             return new MarkRecipeAsFavoriteOutput(
-                    aBoolean,
+                    markedAsFavorite,
                     recipeId
             );
         }

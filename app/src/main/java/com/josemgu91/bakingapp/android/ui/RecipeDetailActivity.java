@@ -26,8 +26,10 @@ package com.josemgu91.bakingapp.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -37,8 +39,12 @@ import android.view.View;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoriteController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoriteViewModel;
+import com.josemgu91.bakingapp.android.Application;
 import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
 import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFragment;
+import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
 
 /**
  * Created by jose on 2/27/18.
@@ -60,6 +66,11 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
     private FloatingActionButton floatingActionButtonMarkAsFavorite;
 
+    private boolean isFavorite;
+    private String recipeId;
+
+    private MarkRecipeAsFavoriteController markRecipeAsFavoriteController;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null && !savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_USE_SAVED_INSTANCE_STATE)) {
@@ -68,6 +79,13 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         floatingActionButtonMarkAsFavorite = findViewById(R.id.floatingactionbutton_mark_as_favorite);
+        markRecipeAsFavoriteController = createMarkAsFavoriteInteraction();
+        floatingActionButtonMarkAsFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markAsFavoriteButtonClicked();
+            }
+        });
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
@@ -82,16 +100,23 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                 registerFragmentListener(f);
             }
         }, false);
-        if (savedInstanceState == null) {
-            if (getIntent().hasExtra(PARAM_RECIPE_ID)) {
-                final String recipeId = getIntent().getStringExtra(PARAM_RECIPE_ID);
-                fragmentManager
-                        .beginTransaction()
-                        .replace(R.id.fragment_pane_1, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
-                        .commit();
-            } else {
-                throw new IllegalStateException("Must have the RECIPE_ID parameter!");
+        if (getIntent().hasExtra(PARAM_RECIPE_ID)) {
+            recipeId = getIntent().getStringExtra(PARAM_RECIPE_ID);
+            try {
+                //TODO: This call shouldn't be in this layer.
+                isFavorite = ((Application) getApplication()).getFavoriteRepositoryInstance().isFavorite(recipeId);
+            } catch (DataGatewayException e) {
+                e.printStackTrace();
             }
+            setMarkAsFavoriteButtonIcon(isFavorite);
+        } else {
+            throw new IllegalStateException("Must have the RECIPE_ID parameter!");
+        }
+        if (savedInstanceState == null) {
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_pane_1, RecipeDetailFragment.newInstance(recipeId), FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
+                    .commit();
         } else {
             final Fragment recipeStepDetailFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT);
             if (recipeStepDetailFragment != null) {
@@ -139,6 +164,42 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                 }
                 break;
         }
+    }
+
+    private void markAsFavoriteButtonClicked() {
+        if (isFavorite) {
+            markRecipeAsFavoriteController.unmarkAsFavorite(recipeId);
+        } else {
+            markRecipeAsFavoriteController.markAsFavorite(recipeId);
+        }
+    }
+
+    private void setMarkAsFavoriteButtonIcon(final boolean isFavorite) {
+        @DrawableRes final int iconDrawable = isFavorite
+                ? R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_border_white_24dp;
+        floatingActionButtonMarkAsFavorite.setImageResource(iconDrawable);
+    }
+
+    private MarkRecipeAsFavoriteController createMarkAsFavoriteInteraction() {
+        final com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<MarkRecipeAsFavoriteViewModel> markAsFavoriteView
+                = new com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<MarkRecipeAsFavoriteViewModel>() {
+            @Override
+            public void showResult(MarkRecipeAsFavoriteViewModel markRecipeAsFavoriteViewModel) {
+                final boolean markedAsFavorite = markRecipeAsFavoriteViewModel.isMarkedAsFavorite();
+                setMarkAsFavoriteButtonIcon(markedAsFavorite);
+            }
+
+            @Override
+            public void showInProgress() {
+
+            }
+
+            @Override
+            public void showError() {
+                Snackbar.make(floatingActionButtonMarkAsFavorite, R.string.recipe_detail_mark_as_favorite_error, Snackbar.LENGTH_SHORT).show();
+            }
+        };
+        return new ControllerFactoryImpl(this).createMarkRecipeAsFavoriteController(markAsFavoriteView);
     }
 
     @Override

@@ -51,7 +51,7 @@ public class MarkRecipeAsFavoriteController extends AbstractController {
         executeInControllerExecutor(new Runnable() {
             @Override
             public void run() {
-                new MarkRecipeAsFavorite(markRecipeAsFavoriteUseCaseOutput, favoriteRecipesDataGateway, new MarkRecipeAsFavorite.Input(recipeId, true));
+                new MarkRecipeAsFavorite(markRecipeAsFavoriteUseCaseOutput, favoriteRecipesDataGateway, new MarkRecipeAsFavorite.Input(recipeId, true)).execute();
             }
         });
     }
@@ -60,7 +60,7 @@ public class MarkRecipeAsFavoriteController extends AbstractController {
         executeInControllerExecutor(new Runnable() {
             @Override
             public void run() {
-                new MarkRecipeAsFavorite(markRecipeAsFavoriteUseCaseOutput, favoriteRecipesDataGateway, new MarkRecipeAsFavorite.Input(recipeId, false));
+                new MarkRecipeAsFavorite(markRecipeAsFavoriteUseCaseOutput, favoriteRecipesDataGateway, new MarkRecipeAsFavorite.Input(recipeId, false)).execute();
             }
         });
     }

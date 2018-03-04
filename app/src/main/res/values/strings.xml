@@ -41,4 +41,6 @@
     <string name="recipe_detail_generic_error">Can\'t load recipe details.</string>
 
     <string name="recipe_step_detail_header_step_description">Step Description</string>
+
+    <string name="recipe_detail_mark_as_favorite_error">Can\'t mark/unmark the recipe as favorite</string>
 </resources>
