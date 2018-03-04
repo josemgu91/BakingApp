@@ -27,11 +27,13 @@ package com.josemgu91.bakingapp.android.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
@@ -42,7 +44,7 @@ import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFra
  * Created by jose on 2/27/18.
  */
 
-public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepSelectedListener {
+public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnStepSelectedListener, RecipeDetailFragment.OnListScrolledListener {
 
     public static final String PARAM_RECIPE_ID = "com.josemgu91.bakingapp.RECIPE_ID";
     public static final String PARAM_RECIPE_NAME = "com.josemgu91.bakingapp.RECIPE_NAME";
@@ -56,6 +58,8 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
 
     private boolean useSavedInstanceState = true;
 
+    private FloatingActionButton floatingActionButtonMarkAsFavorite;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null && !savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_USE_SAVED_INSTANCE_STATE)) {
@@ -63,6 +67,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        floatingActionButtonMarkAsFavorite = findViewById(R.id.floatingactionbutton_mark_as_favorite);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
@@ -129,6 +134,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         switch (fragment.getTag()) {
             case FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT:
                 ((RecipeDetailFragment) fragment).setOnStepSelectedListener(this);
+                if (!isInTwoPaneMode()) {
+                    ((RecipeDetailFragment) fragment).setOnListScrolledListener(this);
+                }
                 break;
         }
     }
@@ -142,6 +150,15 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
                     .commit();
         } else {
             RecipeStepDetailActivity.start(this, step);
+        }
+    }
+
+    @Override
+    public void onRecipeDetailListScrolled(int dx, int dy) {
+        if (dy > 0 && floatingActionButtonMarkAsFavorite.getVisibility() == View.VISIBLE) {
+            floatingActionButtonMarkAsFavorite.hide();
+        } else if (dy < 0 && floatingActionButtonMarkAsFavorite.getVisibility() != View.VISIBLE) {
+            floatingActionButtonMarkAsFavorite.show();
         }
     }
 }

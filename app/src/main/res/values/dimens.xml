@@ -26,4 +26,5 @@
     <dimen name="menu_pane_width">300dp</dimen>
     <dimen name="video_player_height">240dp</dimen>
     <dimen name="content_margin">8dp</dimen>
+    <dimen name="floating_action_button_margin">16dp</dimen>
 </resources>

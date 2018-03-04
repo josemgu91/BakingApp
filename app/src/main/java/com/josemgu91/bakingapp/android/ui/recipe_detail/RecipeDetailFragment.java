@@ -65,6 +65,7 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
     private RecipeDetailRecyclerViewAdapter recipeDetailRecyclerViewAdapter;
 
     private OnStepSelectedListener onStepSelectedListener;
+    private OnListScrolledListener onListScrolledListener;
 
     private RecyclerView recyclerViewRecipeDetail;
     private View progressBarRecipeDetailRetrievingProgress;
@@ -78,6 +79,10 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
 
     public void setOnStepSelectedListener(OnStepSelectedListener onStepSelectedListener) {
         this.onStepSelectedListener = onStepSelectedListener;
+    }
+
+    public void setOnListScrolledListener(OnListScrolledListener onListScrolledListener) {
+        this.onListScrolledListener = onListScrolledListener;
     }
 
     @Nullable
@@ -119,6 +124,14 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
         });
         recyclerViewRecipeDetail.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewRecipeDetail.setAdapter(recipeDetailRecyclerViewAdapter);
+        recyclerViewRecipeDetail.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (onListScrolledListener != null) {
+                    onListScrolledListener.onRecipeDetailListScrolled(dx, dy);
+                }
+            }
+        });
         return view;
     }
 
@@ -220,6 +233,12 @@ public class RecipeDetailFragment extends Fragment implements RecipeDetailViewIn
     public interface OnStepSelectedListener {
 
         void onStepSelected(GetRecipeStepsViewModel.Step step);
+
+    }
+
+    public interface OnListScrolledListener {
+
+        void onRecipeDetailListScrolled(int dx, int dy);
 
     }
 
