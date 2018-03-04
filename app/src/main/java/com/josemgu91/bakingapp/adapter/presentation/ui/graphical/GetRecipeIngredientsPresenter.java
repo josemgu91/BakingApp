@@ -40,7 +40,7 @@ public class GetRecipeIngredientsPresenter extends AbstractGetPresenter<List<Ing
 
     private final ListMapper<IngredientOutput, GetRecipeIngredientsViewModel.Ingredient> ingredientOutputListMapper;
 
-    public GetRecipeIngredientsPresenter(View<GetRecipeIngredientsViewModel> view, Executor viewExecutor) {
+    public GetRecipeIngredientsPresenter(GetView<GetRecipeIngredientsViewModel> view, Executor viewExecutor) {
         super(view, viewExecutor);
         this.ingredientOutputListMapper = new ListMapper<>(new IngredientOutputMapper());
     }

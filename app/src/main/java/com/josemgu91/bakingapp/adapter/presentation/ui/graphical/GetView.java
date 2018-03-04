@@ -25,15 +25,10 @@
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical;
 
 /**
- * Created by jose on 2/15/18.
+ * Created by jose on 3/4/18.
  */
 
-public interface View<ViewModel> {
+public interface GetView<ViewModel> extends View<ViewModel> {
 
-    void showResult(final ViewModel viewModel);
-
-    void showInProgress();
-
-    void showError();
-
+    void showNoResult();
 }

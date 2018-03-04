@@ -24,6 +24,7 @@
 
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget;
 
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractGetPresenter;
 import com.josemgu91.bakingapp.domain.usecases.RecipeWithIngredientsOutput;
@@ -42,7 +43,7 @@ public class GetRecipesWithIngredientsPresenter extends AbstractGetPresenter<Lis
 
     private ListMapper<RecipeWithIngredientsOutput, GetRecipesWithIngredientsViewModel.Recipe> recipesOutputListMapper;
 
-    public GetRecipesWithIngredientsPresenter(View<GetRecipesWithIngredientsViewModel> view, Executor viewExecutor) {
+    public GetRecipesWithIngredientsPresenter(GetView<GetRecipesWithIngredientsViewModel> view, Executor viewExecutor) {
         super(view, viewExecutor);
         this.recipesOutputListMapper = new ListMapper<>(new RecipesWithIngredientsOutputMapper());
     }

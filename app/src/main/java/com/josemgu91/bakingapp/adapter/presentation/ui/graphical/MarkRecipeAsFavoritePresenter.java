@@ -24,43 +24,37 @@
 
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical;
 
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractGetPresenter;
-import com.josemgu91.bakingapp.domain.usecases.StepOutput;
-import com.josemgu91.bakingapp.domain.util.ListMapper;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractPresenter;
+import com.josemgu91.bakingapp.domain.usecases.MarkRecipeAsFavoriteOutput;
 import com.josemgu91.bakingapp.domain.util.OutputMapper;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
- * Created by jose on 2/16/18.
+ * Created by jose on 3/4/18.
  */
 
-public class GetRecipeStepsPresenter extends AbstractGetPresenter<List<StepOutput>, GetRecipeStepsViewModel> {
+public class MarkRecipeAsFavoritePresenter extends AbstractPresenter<MarkRecipeAsFavoriteOutput, MarkRecipeAsFavoriteViewModel> {
 
-    private final ListMapper<StepOutput, GetRecipeStepsViewModel.Step> stepsOutputListMapper;
+    private final OutputMapper<MarkRecipeAsFavoriteOutput, MarkRecipeAsFavoriteViewModel> markRecipeAsFavoriteOutputMapper;
 
-    public GetRecipeStepsPresenter(GetView<GetRecipeStepsViewModel> view, Executor viewExecutor) {
+    public MarkRecipeAsFavoritePresenter(View<MarkRecipeAsFavoriteViewModel> view, Executor viewExecutor) {
         super(view, viewExecutor);
-        this.stepsOutputListMapper = new ListMapper<>(new StepOutputMapper());
+        this.markRecipeAsFavoriteOutputMapper = new MarkRecipeAsFavoriteOutputMapper();
     }
 
     @Override
-    protected GetRecipeStepsViewModel createResultViewModel(List<StepOutput> stepOutputs) {
-        return new GetRecipeStepsViewModel(
-                stepsOutputListMapper.map(stepOutputs)
-        );
+    protected MarkRecipeAsFavoriteViewModel createResultViewModel(MarkRecipeAsFavoriteOutput useCaseOutput) {
+        return markRecipeAsFavoriteOutputMapper.map(useCaseOutput);
     }
 
-    private static class StepOutputMapper implements OutputMapper<StepOutput, GetRecipeStepsViewModel.Step> {
+    private static class MarkRecipeAsFavoriteOutputMapper implements OutputMapper<MarkRecipeAsFavoriteOutput, MarkRecipeAsFavoriteViewModel> {
 
         @Override
-        public GetRecipeStepsViewModel.Step map(StepOutput stepOutput) {
-            return new GetRecipeStepsViewModel.Step(
-                    stepOutput.getShortDescription(),
-                    stepOutput.getLongDescription(),
-                    stepOutput.getPictureUrl(),
-                    stepOutput.getVideoUrl()
+        public MarkRecipeAsFavoriteViewModel map(MarkRecipeAsFavoriteOutput markRecipeAsFavoriteOutput) {
+            return new MarkRecipeAsFavoriteViewModel(
+                    markRecipeAsFavoriteOutput.isMarkedAsFavorite(),
+                    markRecipeAsFavoriteOutput.getRecipeId()
             );
         }
     }

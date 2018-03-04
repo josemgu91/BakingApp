@@ -149,7 +149,7 @@ public class RecipesFragment extends Fragment implements com.josemgu91.bakingapp
     }
 
     @Override
-    public void showRetrieveError() {
+    public void showError() {
         progressBarRecipesRetrievingProgress.setVisibility(View.GONE);
         errorViewErrorMessage.setVisibility(View.VISIBLE);
         recyclerViewRecipes.setVisibility(View.GONE);

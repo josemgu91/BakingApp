@@ -137,7 +137,7 @@ public class RecipesWidgetService extends Service implements View<GetRecipesWith
     }
 
     @Override
-    public void showRetrieveError() {
+    public void showError() {
         finishService();
     }
 

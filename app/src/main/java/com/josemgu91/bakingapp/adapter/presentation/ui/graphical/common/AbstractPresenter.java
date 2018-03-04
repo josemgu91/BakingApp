@@ -24,28 +24,56 @@
 
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common;
 
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
-import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
+import com.josemgu91.bakingapp.domain.usecases.common.UseCaseOutput;
 
 import java.util.concurrent.Executor;
 
 /**
- * Created by jose on 2/16/18.
+ * Created by jose on 3/4/18.
  */
 
-public abstract class AbstractGetPresenter<UseCaseOutput, ViewModel> extends AbstractPresenter<UseCaseOutput, ViewModel> implements GetUseCaseOutput<UseCaseOutput> {
+public abstract class AbstractPresenter<UseCaseOutputType, ViewModel> implements UseCaseOutput<UseCaseOutputType> {
 
-    public AbstractGetPresenter(GetView<ViewModel> view, Executor viewExecutor) {
-        super(view, viewExecutor);
+    final View<ViewModel> view;
+    final Executor viewExecutor;
+
+    public AbstractPresenter(View<ViewModel> view, Executor viewExecutor) {
+        this.view = view;
+        this.viewExecutor = viewExecutor;
     }
 
+    protected abstract ViewModel createResultViewModel(UseCaseOutputType useCaseOutput);
+
     @Override
-    public void showNoResult() {
+    public void showResult(UseCaseOutputType useCaseOutput) {
+        final ViewModel resultViewModel = createResultViewModel(useCaseOutput);
         viewExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                ((GetView) view).showNoResult();
+                view.showResult(resultViewModel);
             }
         });
     }
+
+    @Override
+    public void showInProgress() {
+        viewExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                view.showInProgress();
+            }
+        });
+    }
+
+    @Override
+    public void showError() {
+        viewExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                view.showError();
+            }
+        });
+    }
+
 }

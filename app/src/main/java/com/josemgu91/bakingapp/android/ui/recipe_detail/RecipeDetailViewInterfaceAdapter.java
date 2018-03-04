@@ -53,7 +53,7 @@ public class RecipeDetailViewInterfaceAdapter {
             }
 
             @Override
-            public void showRetrieveError() {
+            public void showError() {
                 recipeDetailViewInterface.showStepsRetrieveError();
             }
 
@@ -74,7 +74,7 @@ public class RecipeDetailViewInterfaceAdapter {
             }
 
             @Override
-            public void showRetrieveError() {
+            public void showError() {
                 recipeDetailViewInterface.showIngredientsRetrieveError();
             }
 
