@@ -22,40 +22,27 @@
  * SOFTWARE.
  */
 
-package com.josemgu91.bakingapp.data;
-
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+package com.josemgu91.bakingapp.domain.usecases;
 
 /**
  * Created by jose on 3/3/18.
  */
 
-public class SqLiteFavoriteRepository extends SQLiteOpenHelper {
+public class MarkRecipeAsFavoriteOutput {
 
-    private static final int VERSION = 1;
-    private static final String DATABASE_NAME = "favorite_recipes_db";
+    private final boolean markedAsFavorite;
+    private final String recipeId;
 
-    public static final String TABLE_FAVORITE_RECIPES = "favoriteRecipes";
-    public static final String TABLE_FAVORITE_RECIPES_COLUMN_RECIPE_ID = "recipeId";
-
-    public SqLiteFavoriteRepository(Context context) {
-        super(context, DATABASE_NAME, null, VERSION);
+    public MarkRecipeAsFavoriteOutput(boolean markedAsFavorite, String recipeId) {
+        this.markedAsFavorite = markedAsFavorite;
+        this.recipeId = recipeId;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        final String sql = String.format(
-                "CREATE TABLE %s (%s TEXT UNIQUE)",
-                TABLE_FAVORITE_RECIPES,
-                TABLE_FAVORITE_RECIPES_COLUMN_RECIPE_ID
-        );
-        db.execSQL(sql);
+    public boolean isMarkedAsFavorite() {
+        return markedAsFavorite;
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        throw new IllegalStateException("This shouldn't be triggered because it's the first database version!");
+    public String getRecipeId() {
+        return recipeId;
     }
 }

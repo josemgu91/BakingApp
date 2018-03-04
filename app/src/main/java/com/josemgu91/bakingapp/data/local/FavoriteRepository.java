@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.josemgu91.bakingapp.data;
+package com.josemgu91.bakingapp.data.local;
 
 import android.content.ContentValues;
 import android.database.Cursor;

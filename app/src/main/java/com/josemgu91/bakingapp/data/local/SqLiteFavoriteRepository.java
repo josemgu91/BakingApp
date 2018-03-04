@@ -22,11 +22,40 @@
  * SOFTWARE.
  */
 
-package com.josemgu91.bakingapp.domain.usecases.common;
+package com.josemgu91.bakingapp.data.local;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by jose on 3/3/18.
  */
 
-public interface SaveUseCaseOutput<Output> extends UseCaseOutput<Output> {
+public class SqLiteFavoriteRepository extends SQLiteOpenHelper {
+
+    private static final int VERSION = 1;
+    private static final String DATABASE_NAME = "favorite_recipes_db";
+
+    public static final String TABLE_FAVORITE_RECIPES = "favoriteRecipes";
+    public static final String TABLE_FAVORITE_RECIPES_COLUMN_RECIPE_ID = "recipeId";
+
+    public SqLiteFavoriteRepository(Context context) {
+        super(context, DATABASE_NAME, null, VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        final String sql = String.format(
+                "CREATE TABLE %s (%s TEXT UNIQUE)",
+                TABLE_FAVORITE_RECIPES,
+                TABLE_FAVORITE_RECIPES_COLUMN_RECIPE_ID
+        );
+        db.execSQL(sql);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        throw new IllegalStateException("This shouldn't be triggered because it's the first database version!");
+    }
 }
