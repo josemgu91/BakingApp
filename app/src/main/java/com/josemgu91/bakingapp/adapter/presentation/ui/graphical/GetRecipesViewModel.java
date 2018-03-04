@@ -70,15 +70,18 @@ public class GetRecipesViewModel {
         private final String name;
         private final int servings;
         private final String pictureUrl;
+        private final boolean isFavorite;
 
-        public Recipe(String id, String name, int servings, String pictureUrl) {
+        public Recipe(String id, String name, int servings, String pictureUrl, boolean isFavorite) {
             this.id = id;
             this.name = name;
             this.servings = servings;
             this.pictureUrl = pictureUrl;
+            this.isFavorite = isFavorite;
         }
 
         public String getId() {
+
             return id;
         }
 
@@ -94,14 +97,8 @@ public class GetRecipesViewModel {
             return pictureUrl;
         }
 
-        @Override
-        public String toString() {
-            return "Recipe{" +
-                    "id='" + id + '\'' +
-                    ", name='" + name + '\'' +
-                    ", servings=" + servings +
-                    ", pictureUrl='" + pictureUrl + '\'' +
-                    '}';
+        public boolean isFavorite() {
+            return isFavorite;
         }
 
         @Override
@@ -112,6 +109,7 @@ public class GetRecipesViewModel {
             Recipe recipe = (Recipe) o;
 
             if (servings != recipe.servings) return false;
+            if (isFavorite != recipe.isFavorite) return false;
             if (id != null ? !id.equals(recipe.id) : recipe.id != null) return false;
             if (name != null ? !name.equals(recipe.name) : recipe.name != null) return false;
             return pictureUrl != null ? pictureUrl.equals(recipe.pictureUrl) : recipe.pictureUrl == null;
@@ -123,7 +121,19 @@ public class GetRecipesViewModel {
             result = 31 * result + (name != null ? name.hashCode() : 0);
             result = 31 * result + servings;
             result = 31 * result + (pictureUrl != null ? pictureUrl.hashCode() : 0);
+            result = 31 * result + (isFavorite ? 1 : 0);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Recipe{" +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", servings=" + servings +
+                    ", pictureUrl='" + pictureUrl + '\'' +
+                    ", isFavorite=" + isFavorite +
+                    '}';
         }
     }
 

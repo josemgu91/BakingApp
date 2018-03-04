@@ -25,6 +25,7 @@
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical;
 
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractController;
+import com.josemgu91.bakingapp.domain.datagateways.FavoriteRecipesDataGateway;
 import com.josemgu91.bakingapp.domain.datagateways.RecipeDataGateway;
 import com.josemgu91.bakingapp.domain.usecases.GetRecipes;
 import com.josemgu91.bakingapp.domain.usecases.RecipeOutput;
@@ -41,9 +42,9 @@ public class GetRecipesController extends AbstractController {
 
     private final GetRecipes getRecipesUseCase;
 
-    public GetRecipesController(Executor controllerExecutor, GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput, RecipeDataGateway recipeDataGateway) {
+    public GetRecipesController(Executor controllerExecutor, GetUseCaseOutput<List<RecipeOutput>> getRecipesUseCaseOutput, RecipeDataGateway recipeDataGateway, FavoriteRecipesDataGateway favoriteRecipesDataGateway) {
         super(controllerExecutor);
-        getRecipesUseCase = new GetRecipes(getRecipesUseCaseOutput, recipeDataGateway);
+        getRecipesUseCase = new GetRecipes(getRecipesUseCaseOutput, recipeDataGateway, favoriteRecipesDataGateway, new GetRecipes.Criteria(GetRecipes.Criteria.ALL_RECIPES));
     }
 
     public void getRecipes() {

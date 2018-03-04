@@ -60,7 +60,8 @@ public class GetRecipesPresenter extends AbstractGetPresenter<List<RecipeOutput>
                     recipeOutput.getId(),
                     recipeOutput.getName(),
                     recipeOutput.getServings(),
-                    recipeOutput.getPictureUrl()
+                    recipeOutput.getPictureUrl(),
+                    recipeOutput.isFavorite()
             );
         }
     }

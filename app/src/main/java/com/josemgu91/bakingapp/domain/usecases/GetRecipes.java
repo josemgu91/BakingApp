@@ -25,42 +25,102 @@
 package com.josemgu91.bakingapp.domain.usecases;
 
 import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
+import com.josemgu91.bakingapp.domain.datagateways.FavoriteRecipesDataGateway;
 import com.josemgu91.bakingapp.domain.datagateways.RecipeDataGateway;
 import com.josemgu91.bakingapp.domain.entities.Recipe;
-import com.josemgu91.bakingapp.domain.usecases.common.AbstractGetUseCase;
+import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
 import com.josemgu91.bakingapp.domain.util.ListMapper;
 import com.josemgu91.bakingapp.domain.util.OutputMapper;
-import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jose on 2/14/18.
  */
 
-public class GetRecipes extends AbstractGetUseCase<List<Recipe>, List<RecipeOutput>> {
+public class GetRecipes {
 
+    private final GetUseCaseOutput<List<RecipeOutput>> getUseCaseOutput;
+    private final OutputMapper<List<RecipeWithFavoriteMark>, List<RecipeOutput>> outputMapper;
     private final RecipeDataGateway recipeDataGateway;
+    private final FavoriteRecipesDataGateway favoriteRecipesDataGateway;
+    private final int searchCriteria;
 
-    public GetRecipes(GetUseCaseOutput<List<RecipeOutput>> getUseCaseOutput, RecipeDataGateway recipeDataGateway) {
-        super(getUseCaseOutput, new ListMapper<>(new RecipeMapper()));
+    public GetRecipes(GetUseCaseOutput<List<RecipeOutput>> getUseCaseOutput, RecipeDataGateway recipeDataGateway, FavoriteRecipesDataGateway favoriteRecipesDataGateway, Criteria criteria) {
+        this.getUseCaseOutput = getUseCaseOutput;
+        this.outputMapper = new ListMapper<>(new RecipeMapper());
         this.recipeDataGateway = recipeDataGateway;
+        this.favoriteRecipesDataGateway = favoriteRecipesDataGateway;
+        this.searchCriteria = criteria.criteria;
     }
 
-    @Override
-    protected List<Recipe> getData() throws DataGatewayException {
-        return recipeDataGateway.getRecipes();
+    public void execute() {
+        try {
+            getUseCaseOutput.showInProgress();
+            final List<RecipeWithFavoriteMark> result = new ArrayList<>();
+            if (searchCriteria == Criteria.ALL_RECIPES) {
+                final List<Recipe> allRecipes = recipeDataGateway.getRecipes();
+                for (final Recipe recipe : allRecipes) {
+                    result.add(new RecipeWithFavoriteMark(recipe, favoriteRecipesDataGateway.isFavorite(recipe.getId())));
+                }
+            } else if (searchCriteria == Criteria.ONLY_FAVORITE) {
+                final List<Recipe> favoriteRecipes = favoriteRecipesDataGateway.getFavoriteRecipes();
+                for (final Recipe recipe : favoriteRecipes) {
+                    result.add(new RecipeWithFavoriteMark(recipe, true));
+                }
+            } else {
+                //Maybe a special UseCase exception should be used?
+                throw new RuntimeException("Invalid criteria during execution!");
+            }
+            if (result.size() == 0) {
+                getUseCaseOutput.showNoResult();
+            } else {
+                final List<RecipeOutput> output = outputMapper.map(result);
+                getUseCaseOutput.showResult(output);
+            }
+        } catch (DataGatewayException e) {
+            e.printStackTrace();
+            getUseCaseOutput.showError();
+        }
     }
 
-    private static class RecipeMapper implements OutputMapper<Recipe, RecipeOutput> {
+    private static class RecipeWithFavoriteMark {
+
+        private final Recipe recipe;
+        private final boolean isFavorite;
+
+        public RecipeWithFavoriteMark(Recipe recipe, boolean isFavorite) {
+            this.recipe = recipe;
+            this.isFavorite = isFavorite;
+        }
+    }
+
+    public static class Criteria {
+        public static final int ALL_RECIPES = 1;
+        public static final int ONLY_FAVORITE = 2;
+
+        private int criteria;
+
+        public Criteria(int criteria) {
+            if (criteria < 1 || criteria > 2) {
+                //Maybe a special UseCase exception should be used?
+                throw new RuntimeException("Invalid criteria!");
+            }
+            this.criteria = criteria;
+        }
+    }
+
+    private static class RecipeMapper implements OutputMapper<RecipeWithFavoriteMark, RecipeOutput> {
 
         @Override
-        public RecipeOutput map(Recipe recipe) {
+        public RecipeOutput map(RecipeWithFavoriteMark recipeWithFavoriteMark) {
             return new RecipeOutput(
-                    recipe.getId(),
-                    recipe.getName(),
-                    recipe.getServings(),
-                    recipe.getPictureUrl()
+                    recipeWithFavoriteMark.recipe.getId(),
+                    recipeWithFavoriteMark.recipe.getName(),
+                    recipeWithFavoriteMark.recipe.getServings(),
+                    recipeWithFavoriteMark.recipe.getPictureUrl(),
+                    recipeWithFavoriteMark.isFavorite
             );
         }
     }

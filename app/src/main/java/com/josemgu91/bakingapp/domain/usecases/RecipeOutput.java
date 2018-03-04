@@ -34,12 +34,14 @@ public class RecipeOutput {
     private final String name;
     private final int servings;
     private final String pictureUrl;
+    private final boolean isFavorite;
 
-    public RecipeOutput(String id, String name, int servings, String pictureUrl) {
+    public RecipeOutput(String id, String name, int servings, String pictureUrl, boolean isFavorite) {
         this.id = id;
         this.name = name;
         this.servings = servings;
         this.pictureUrl = pictureUrl;
+        this.isFavorite = isFavorite;
     }
 
     public String getId() {
@@ -56,5 +58,9 @@ public class RecipeOutput {
 
     public String getPictureUrl() {
         return pictureUrl;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
     }
 }
