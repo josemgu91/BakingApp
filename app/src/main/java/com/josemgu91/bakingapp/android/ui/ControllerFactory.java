@@ -31,6 +31,9 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsV
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoriteController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoriteViewModel;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
 
@@ -48,4 +51,5 @@ public interface ControllerFactory {
 
     GetRecipesWithIngredientsController createGetRecipesWithIngredientsController(final GetView<GetRecipesWithIngredientsViewModel> getRecipesWithIngredientsViewModel);
 
+    MarkRecipeAsFavoriteController createMarkRecipeAsFavoriteController(final View<MarkRecipeAsFavoriteViewModel> markRecipeAsFavoriteViewModel);
 }

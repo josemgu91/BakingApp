@@ -36,6 +36,10 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesContr
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesPresenter;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoriteController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoritePresenter;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFavoriteViewModel;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsPresenter;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
@@ -88,4 +92,9 @@ public class ControllerFactoryImpl implements ControllerFactory {
         return new GetRecipesWithIngredientsController(defaultThreadPoolExecutor, getRecipesWithIngredientsPresenter, remoteRetrofitRepository);
     }
 
+    @Override
+    public MarkRecipeAsFavoriteController createMarkRecipeAsFavoriteController(View<MarkRecipeAsFavoriteViewModel> markRecipeAsFavoriteViewModel) {
+        final MarkRecipeAsFavoritePresenter markRecipeAsFavoritePresenter = new MarkRecipeAsFavoritePresenter(markRecipeAsFavoriteViewModel, uiThreadExecutor);
+        return new MarkRecipeAsFavoriteController(defaultThreadPoolExecutor, markRecipeAsFavoritePresenter, favoriteRepository);
+    }
 }
