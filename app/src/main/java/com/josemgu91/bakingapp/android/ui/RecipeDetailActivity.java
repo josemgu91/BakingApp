@@ -104,7 +104,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         super.onNewIntent(intent);
         final String recipeId = intent.getStringExtra(PARAM_RECIPE_ID);
         final String recipeName = intent.getStringExtra(PARAM_RECIPE_NAME);
-        if (!recipeId.equals(getIntent().getStringExtra(PARAM_RECIPE_ID)) &&
+        if (recipeId != null &&
+                recipeName != null &&
+                !recipeId.equals(getIntent().getStringExtra(PARAM_RECIPE_ID)) &&
                 !recipeName.equals(getIntent().getStringExtra(PARAM_RECIPE_NAME))) {
             getIntent().putExtra(PARAM_RECIPE_ID, recipeId);
             getIntent().putExtra(PARAM_RECIPE_NAME, recipeName);
