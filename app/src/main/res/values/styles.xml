@@ -95,7 +95,8 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="errorTextColor">@color/secondaryTextColor</item>
-        <!--<item name="errorDrawable"></item>-->
+        <item name="errorDrawable">@drawable/ic_error</item>
+        <item name="errorDrawableTint">@color/secondaryColor</item>
     </style>
 
 </resources>

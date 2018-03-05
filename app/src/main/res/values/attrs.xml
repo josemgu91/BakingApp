@@ -27,5 +27,6 @@
         <attr name="errorTextColor" format="color" />
         <attr name="errorText" format="string" />
         <attr name="errorDrawable" format="reference" />
+        <attr name="errorDrawableTint" format="color" />
     </declare-styleable>
 </resources>

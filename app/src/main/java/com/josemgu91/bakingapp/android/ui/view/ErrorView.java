@@ -31,6 +31,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,6 +52,8 @@ public class ErrorView extends LinearLayout {
     @ColorInt
     private int errorTextColor;
     private Drawable errorDrawable;
+    @ColorInt
+    private int errorDrawableTint;
 
     private TextView textViewErrorText;
     private ImageView imageViewErrorPicture;
@@ -92,9 +96,13 @@ public class ErrorView extends LinearLayout {
                 errorText = styledAttributes.getString(R.styleable.ErrorView_errorText);
                 errorTextColor = styledAttributes.getColor(R.styleable.ErrorView_errorTextColor, 0xFF000000);
                 errorDrawable = styledAttributes.getDrawable(R.styleable.ErrorView_errorDrawable);
+                errorDrawableTint = styledAttributes.getColor(R.styleable.ErrorView_errorDrawableTint, -1);
                 setErrorText(errorText);
                 setErrorTextColor(errorTextColor);
                 setErrorDrawable(errorDrawable);
+                if (errorDrawableTint != -1) {
+                    setErrorDrawableTint(errorDrawableTint);
+                }
             } finally {
                 styledAttributes.recycle();
             }
@@ -116,4 +124,10 @@ public class ErrorView extends LinearLayout {
         this.errorDrawable = errorDrawable;
     }
 
+    public void setErrorDrawableTint(int errorDrawableTint) {
+        if (errorDrawable != null) {
+            this.errorDrawableTint = errorDrawableTint;
+            DrawableCompat.setTint(errorDrawable, ContextCompat.getColor(getContext(), R.color.secondaryColor));
+        }
+    }
 }
