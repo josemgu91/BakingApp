@@ -45,4 +45,7 @@
     <string name="recipe_detail_mark_as_favorite_error">Can\'t mark/unmark the recipe as favorite</string>
 
     <string name="widget_no_favorite_recipes">You don\'t have favorite recipes yet.</string>
+
+    <string name="content_description_recipe_picture">Recipe picture.</string>
+    <string name="content_description_recipe_step_picture">Recipe step picture.</string>
 </resources>

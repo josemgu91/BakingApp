@@ -25,16 +25,21 @@
 package com.josemgu91.bakingapp.android.ui.recipe_detail;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeIngredientsViewModel;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipeStepsViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +64,8 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
 
     private OnStepSelectedListener onStepSelectedListener;
 
+    private final Drawable defaultStepDrawable;
+
     public void setOnStepSelectedListener(OnStepSelectedListener onStepSelectedListener) {
         this.onStepSelectedListener = onStepSelectedListener;
     }
@@ -69,6 +76,8 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         this.ingredients = new ArrayList<>();
         this.steps = new ArrayList<>();
         updateRelativeIndexCalculator();
+        defaultStepDrawable = ContextCompat.getDrawable(context, R.drawable.ic_step);
+        DrawableCompat.setTint(defaultStepDrawable, ContextCompat.getColor(context, R.color.secondaryColor));
     }
 
     public void setIngredients(List<GetRecipeIngredientsViewModel.Ingredient> ingredients) {
@@ -115,7 +124,7 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                 ((IngredientViewHolder) holder).bind(ingredients.get(indexInfo.relativeIndex));
                 break;
             case VIEW_TYPE_STEP:
-                ((StepViewHolder) holder).bind(indexInfo.relativeIndex + 1, steps.get(indexInfo.relativeIndex), onStepSelectedListener);
+                ((StepViewHolder) holder).bind(indexInfo.relativeIndex + 1, steps.get(indexInfo.relativeIndex), onStepSelectedListener, defaultStepDrawable);
                 break;
             case VIEW_TYPE_SECTION_HEADER:
                 @StringRes final int sectionName = indexInfo.listType == VIEW_TYPE_INGREDIENT ? R.string.recipe_detail_header_ingredients : R.string.recipe_detail_header_steps;
@@ -234,14 +243,16 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         private final Context context;
 
         private final TextView textViewStepName;
+        private final ImageView imageViewStep;
 
         public StepViewHolder(final ViewGroup parent, final Context context, final LayoutInflater layoutInflater) {
             super(layoutInflater.inflate(R.layout.element_recipe_step, parent, false));
             this.context = context;
             textViewStepName = itemView.findViewById(R.id.textview_recipe_step_name);
+            imageViewStep = itemView.findViewById(R.id.imageview_step);
         }
 
-        public void bind(final int stepNumber, final GetRecipeStepsViewModel.Step step, final OnStepSelectedListener onStepSelectedListener) {
+        public void bind(final int stepNumber, final GetRecipeStepsViewModel.Step step, final OnStepSelectedListener onStepSelectedListener, final Drawable defaultStepDrawable) {
             textViewStepName.setText(context.getString(R.string.recipe_detail_step_short_description, stepNumber, step.getShortDescription()));
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -251,6 +262,13 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
                     }
                 }
             });
+            final String stepPictureUrl = step.getPictureUrl();
+            if (!stepPictureUrl.isEmpty()) {
+                Picasso.with(context)
+                        .load(stepPictureUrl)
+                        .error(defaultStepDrawable)
+                        .into(imageViewStep);
+            }
         }
     }
 

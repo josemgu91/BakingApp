@@ -42,6 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="8dp"
+                android:contentDescription="@string/content_description_recipe_picture"
                 app:layout_constraintBottom_toTopOf="@+id/textview_recipe_name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

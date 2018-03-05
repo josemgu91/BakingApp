@@ -28,15 +28,26 @@
 
     <LinearLayout
         style="@style/StepCardContainer"
+        android:gravity="center"
         android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageview_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/content_description_recipe_step_picture"
+            android:maxHeight="200dp"
+            android:maxWidth="200dp"
+            tools:src="@mipmap/ic_launcher" />
 
         <TextView
             android:id="@+id/textview_recipe_step_name"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/primaryTextColor"
             tools:text="Step Name" />
     </LinearLayout>
