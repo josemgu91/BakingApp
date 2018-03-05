@@ -25,6 +25,9 @@
 package com.josemgu91.bakingapp.android.ui.recipes_list;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +37,7 @@ import android.widget.TextView;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,8 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
 
     private OnRecipeSelectedListener onRecipeSelectedListener;
 
+    private final Drawable defaultDrawable;
+
     public void setOnRecipeSelectedListener(OnRecipeSelectedListener onRecipeSelectedListener) {
         this.onRecipeSelectedListener = onRecipeSelectedListener;
     }
@@ -59,6 +65,8 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
         this.layoutInflater = layoutInflater;
         this.context = context;
         recipeList = new ArrayList<>();
+        defaultDrawable = ContextCompat.getDrawable(context, R.drawable.ic_meal);
+        DrawableCompat.setTint(defaultDrawable, ContextCompat.getColor(context, R.color.secondaryColor));
     }
 
     @Override
@@ -69,7 +77,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         final GetRecipesViewModel.Recipe recipe = recipeList.get(position);
-        holder.bind(recipe, onRecipeSelectedListener);
+        holder.bind(recipe, onRecipeSelectedListener, defaultDrawable);
     }
 
     @Override
@@ -98,7 +106,9 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
             textViewRecipeServings = itemView.findViewById(R.id.textview_recipe_servings);
         }
 
-        public void bind(final GetRecipesViewModel.Recipe recipe, final OnRecipeSelectedListener onRecipeSelectedListener) {
+        public void bind(final GetRecipesViewModel.Recipe recipe,
+                         final OnRecipeSelectedListener onRecipeSelectedListener,
+                         final Drawable defaultDrawable) {
             textViewRecipeName.setText(recipe.getName());
             textViewRecipeServings.setText(context.getString(R.string.widget_recipe_servings, recipe.getServings()));
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +119,15 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
                     }
                 }
             });
+            final String recipeUrl = recipe.getPictureUrl();
+            if (!recipeUrl.isEmpty()) {
+                Picasso.with(context)
+                        .load(recipeUrl)
+                        .error(defaultDrawable)
+                        .into(imageViewRecipePicture);
+            } else {
+                imageViewRecipePicture.setImageDrawable(defaultDrawable);
+            }
         }
 
     }
