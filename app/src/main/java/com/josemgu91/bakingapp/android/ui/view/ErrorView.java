@@ -127,7 +127,7 @@ public class ErrorView extends LinearLayout {
     public void setErrorDrawableTint(int errorDrawableTint) {
         if (errorDrawable != null) {
             this.errorDrawableTint = errorDrawableTint;
-            DrawableCompat.setTint(errorDrawable, ContextCompat.getColor(getContext(), R.color.secondaryColor));
+            DrawableCompat.setTint(DrawableCompat.wrap(errorDrawable), ContextCompat.getColor(getContext(), R.color.secondaryColor));
         }
     }
 }

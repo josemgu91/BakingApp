@@ -66,7 +66,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
         this.context = context;
         recipeList = new ArrayList<>();
         defaultDrawable = ContextCompat.getDrawable(context, R.drawable.ic_meal);
-        DrawableCompat.setTint(defaultDrawable, ContextCompat.getColor(context, R.color.secondaryColor));
+        DrawableCompat.setTint(DrawableCompat.wrap(defaultDrawable), ContextCompat.getColor(context, R.color.secondaryColor));
     }
 
     @Override

@@ -77,7 +77,7 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
         this.steps = new ArrayList<>();
         updateRelativeIndexCalculator();
         defaultStepDrawable = ContextCompat.getDrawable(context, R.drawable.ic_step);
-        DrawableCompat.setTint(defaultStepDrawable, ContextCompat.getColor(context, R.color.secondaryColor));
+        DrawableCompat.setTint(DrawableCompat.wrap(defaultStepDrawable), ContextCompat.getColor(context, R.color.secondaryColor));
     }
 
     public void setIngredients(List<GetRecipeIngredientsViewModel.Ingredient> ingredients) {
