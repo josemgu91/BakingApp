@@ -37,7 +37,7 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import com.josemgu91.bakingapp.R;
@@ -46,8 +46,7 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetFavor
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetFavoriteRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
 import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
-
-import java.util.Arrays;
+import com.josemgu91.bakingapp.android.ui.RecipeListActivity;
 
 /**
  * Created by jose on 2/21/18.
@@ -94,7 +93,6 @@ public class RecipesWidgetService extends Service implements GetView<GetFavorite
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.hasExtra(PARAM_WIDGET_IDS)) {
             widgetIds = intent.getIntArrayExtra(PARAM_WIDGET_IDS);
-            Log.d("RecipesWidgetService", "widgetIds: " + Arrays.toString(widgetIds));
         } else {
             throw new IllegalStateException("The Intent hasn't the PARAM_RECIPES content!");
         }
@@ -122,7 +120,7 @@ public class RecipesWidgetService extends Service implements GetView<GetFavorite
 
     @Override
     public void showResult(GetFavoriteRecipesWithIngredientsViewModel getFavoriteRecipesWithIngredientsViewModel) {
-        updateResult();
+        updateResult(false);
         finishService();
     }
 
@@ -138,31 +136,47 @@ public class RecipesWidgetService extends Service implements GetView<GetFavorite
 
     @Override
     public void showNoResult() {
-        updateResult();
+        updateResult(true);
         finishService();
     }
 
-    private void updateResult() {
+    private void updateResult(final boolean noFavoriteRecipes) {
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_recipes);
-        final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class);
-        remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
-        /*
-         * TODO: I'm not so sure why this restarts the "RecipeDetailActivity"
-         * (whose launch mode is "singleTask"), instead of calling its "onNewIntent" method.
-         */
-        remoteViews.setPendingIntentTemplate(
-                R.id.listview_recipes,
-                PendingIntent.getActivities(
-                        this,
-                        1,
-                        TaskStackBuilder
-                                .create(this)
-                                .addParentStack(RecipeDetailActivity.class)
-                                .addNextIntent(new Intent(this, RecipeDetailActivity.class))
-                                .getIntents(),
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                )
-        );
+        if (noFavoriteRecipes) {
+            remoteViews.setViewVisibility(R.id.listview_recipes, View.GONE);
+            remoteViews.setViewVisibility(R.id.textview_no_favorite_recipes, View.VISIBLE);
+            remoteViews.setOnClickPendingIntent(
+                    R.id.textview_no_favorite_recipes,
+                    PendingIntent.getActivity(
+                            this,
+                            1,
+                            new Intent(this, RecipeListActivity.class),
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+            );
+        } else {
+            remoteViews.setViewVisibility(R.id.listview_recipes, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.textview_no_favorite_recipes, View.GONE);
+            final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class);
+            remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
+            /*
+             * TODO: I'm not so sure why this restarts the "RecipeDetailActivity"
+             * (whose launch mode is "singleTask"), instead of calling its "onNewIntent" method.
+             */
+            remoteViews.setPendingIntentTemplate(
+                    R.id.listview_recipes,
+                    PendingIntent.getActivities(
+                            this,
+                            1,
+                            TaskStackBuilder
+                                    .create(this)
+                                    .addParentStack(RecipeDetailActivity.class)
+                                    .addNextIntent(new Intent(this, RecipeDetailActivity.class))
+                                    .getIntents(),
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+            );
+        }
         updateWidgets(remoteViews);
     }
 
