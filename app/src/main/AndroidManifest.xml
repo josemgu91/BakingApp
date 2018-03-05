@@ -36,7 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".android.ui.RecipesListActivity"
+            android:name=".android.ui.RecipeListActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,7 +48,7 @@
         <activity
             android:name=".android.ui.RecipeDetailActivity"
             android:launchMode="singleTask"
-            android:parentActivityName=".android.ui.RecipesListActivity" />
+            android:parentActivityName=".android.ui.RecipeListActivity" />
 
         <activity
             android:name=".android.ui.RecipeStepDetailActivity"

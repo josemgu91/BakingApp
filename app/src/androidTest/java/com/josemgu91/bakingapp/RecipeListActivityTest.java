@@ -37,12 +37,10 @@ import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
-import com.josemgu91.bakingapp.android.ui.RecipesListActivity;
-import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
+import com.josemgu91.bakingapp.android.ui.RecipeListActivity;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,57 +50,26 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class MainActivityTest {
+public class RecipeListActivityTest {
 
     private IdlingResource idlingResource;
 
     @Rule
-    public IntentsTestRule<RecipesListActivity> mainActivityTestRule = new IntentsTestRule<>(RecipesListActivity.class);
+    public IntentsTestRule<RecipeListActivity> mainActivityTestRule = new IntentsTestRule<>(RecipeListActivity.class);
 
     @Test
     public void clickRecipeElementOpensDetail() {
         registerRecipesFragmentIdlingResource();
         final ViewInteraction recyclerView = Espresso.onView(ViewMatchers.withId(R.id.recyclerview_recipes));
         recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
-        if (isInTablet()) {
-            Intents.intended(
-                    Matchers.allOf(
-                            IntentMatchers.hasComponent(RecipeDetailActivity.class.getName()),
-                            IntentMatchers.hasExtraWithKey(RecipeDetailActivity.PARAM_RECIPE_ID)
-                    )
-            );
-        } else {
-            Assert.assertTrue(
-                    mainActivityTestRule
-                            .getActivity()
-                            .getSupportFragmentManager()
-                            .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT)
-                            != null);
-        }
+        Intents.intended(
+                Matchers.allOf(
+                        IntentMatchers.hasComponent(RecipeDetailActivity.class.getName()),
+                        IntentMatchers.hasExtraWithKey(RecipeDetailActivity.PARAM_RECIPE_ID),
+                        IntentMatchers.hasExtraWithKey(RecipeDetailActivity.PARAM_RECIPE_NAME)
+                )
+        );
         unregisterIdlingResource();
-    }
-
-    @Test
-    public void clickRecipeStepElementOpensStepDetail() {
-        if (!isInTablet()) {
-            registerRecipesFragmentIdlingResource();
-            final ViewInteraction recyclerViewRecipes = Espresso.onView(ViewMatchers.withId(R.id.recyclerview_recipes));
-            recyclerViewRecipes.perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
-            unregisterIdlingResource();
-            registerRecipeDetailFragmentIdlingResource();
-            final ViewInteraction recyclerViewRecipeDetail = Espresso.onView(ViewMatchers.withId(R.id.recyclerview_recipe_detail));
-            recyclerViewRecipeDetail.perform(RecyclerViewActions.actionOnItemAtPosition(
-                    12,
-                    ViewActions.click())
-            );
-            Assert.assertTrue(
-                    mainActivityTestRule
-                            .getActivity()
-                            .getSupportFragmentManager()
-                            .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
-                            != null);
-            unregisterIdlingResource();
-        }
     }
 
     private void unregisterIdlingResource() {
@@ -115,26 +82,8 @@ public class MainActivityTest {
         final RecipesFragment recipesFragment = (RecipesFragment) mainActivityTestRule
                 .getActivity()
                 .getSupportFragmentManager()
-                .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPES_FRAGMENT);
+                .findFragmentByTag(RecipeListActivity.FRAGMENT_TAG_RECIPES_FRAGMENT);
         idlingResource = recipesFragment.getIdlingResource();
         IdlingRegistry.getInstance().register(idlingResource);
     }
-
-    private void registerRecipeDetailFragmentIdlingResource() {
-        final RecipeDetailFragment recipeDetailFragment = (RecipeDetailFragment) mainActivityTestRule
-                .getActivity()
-                .getSupportFragmentManager()
-                .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
-        idlingResource = recipeDetailFragment.getIdlingResource();
-        IdlingRegistry.getInstance().register(idlingResource);
-    }
-
-    private boolean isInTablet() {
-        return mainActivityTestRule
-                .getActivity()
-                .getResources()
-                .getConfiguration()
-                .smallestScreenWidthDp >= 600;
-    }
-
 }

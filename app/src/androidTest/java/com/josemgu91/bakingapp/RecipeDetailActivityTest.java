@@ -31,12 +31,14 @@ import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.intent.matcher.IntentMatchers;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
-import com.josemgu91.bakingapp.android.ui.RecipesListActivity;
+import com.josemgu91.bakingapp.android.ui.RecipeStepDetailActivity;
 import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
 
 import org.junit.Assert;
@@ -50,12 +52,12 @@ import org.junit.runner.RunWith;
  */
 
 @RunWith(AndroidJUnit4.class)
-public class DetailActivityTest {
+public class RecipeDetailActivityTest {
 
     private IdlingResource idlingResource;
 
     @Rule
-    public ActivityTestRule<RecipeDetailActivity> detailActivityTestRule = new ActivityTestRule<>(RecipeDetailActivity.class, false, false);
+    public IntentsTestRule<RecipeDetailActivity> detailActivityTestRule = new IntentsTestRule<>(RecipeDetailActivity.class, false, false);
 
     @Before
     public void putTestIntentExtraValues() {
@@ -73,12 +75,18 @@ public class DetailActivityTest {
                 12,
                 ViewActions.click())
         );
-        Assert.assertTrue(
-                detailActivityTestRule
-                        .getActivity()
-                        .getSupportFragmentManager()
-                        .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
-                        != null);
+        if (isInTwoPaneMode()) {
+            Assert.assertTrue(
+                    detailActivityTestRule
+                            .getActivity()
+                            .getSupportFragmentManager()
+                            .findFragmentByTag(RecipeDetailActivity.FRAGMENT_TAG_RECIPE_STEP_DETAIL_FRAGMENT)
+                            != null);
+        } else {
+            Intents.intended(
+                    IntentMatchers.hasComponent(RecipeStepDetailActivity.class.getName())
+            );
+        }
         unregisterIdlingResource();
     }
 
@@ -86,7 +94,7 @@ public class DetailActivityTest {
         final RecipeDetailFragment recipeDetailFragment = (RecipeDetailFragment) detailActivityTestRule
                 .getActivity()
                 .getSupportFragmentManager()
-                .findFragmentByTag(RecipesListActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
+                .findFragmentByTag(RecipeDetailActivity.FRAGMENT_TAG_RECIPE_DETAIL_FRAGMENT);
         idlingResource = recipeDetailFragment.getIdlingResource();
         IdlingRegistry.getInstance().register(idlingResource);
     }
@@ -95,5 +103,11 @@ public class DetailActivityTest {
         if (idlingResource != null) {
             IdlingRegistry.getInstance().unregister(idlingResource);
         }
+    }
+
+    private boolean isInTwoPaneMode() {
+        return detailActivityTestRule
+                .getActivity()
+                .findViewById(R.id.fragment_pane_2) != null;
     }
 }

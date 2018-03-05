@@ -35,7 +35,7 @@ import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetRecipesViewModel;
 import com.josemgu91.bakingapp.android.ui.recipes_list.RecipesFragment;
 
-public class RecipesListActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener {
+public class RecipeListActivity extends AppCompatActivity implements RecipesFragment.OnRecipeSelectedListener {
 
     public final static String FRAGMENT_TAG_RECIPES_FRAGMENT = "recipes_fragment";
 
