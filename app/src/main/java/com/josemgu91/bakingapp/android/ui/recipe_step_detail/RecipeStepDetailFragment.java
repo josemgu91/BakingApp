@@ -188,6 +188,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (hasVideo) {
+            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
             outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, lastVideoPosition);
         }
     }
