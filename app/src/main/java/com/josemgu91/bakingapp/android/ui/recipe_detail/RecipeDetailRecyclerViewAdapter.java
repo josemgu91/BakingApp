@@ -266,6 +266,7 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             if (!stepPictureUrl.isEmpty()) {
                 Picasso.with(context)
                         .load(stepPictureUrl)
+                        .placeholder(defaultStepDrawable)
                         .error(defaultStepDrawable)
                         .into(imageViewStep);
             }

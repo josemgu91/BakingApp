@@ -123,6 +123,7 @@ public class RecipesRecyclerViewAdapter extends RecyclerView.Adapter<RecipesRecy
             if (!recipeUrl.isEmpty()) {
                 Picasso.with(context)
                         .load(recipeUrl)
+                        .placeholder(defaultDrawable)
                         .error(defaultDrawable)
                         .into(imageViewRecipePicture);
             } else {
