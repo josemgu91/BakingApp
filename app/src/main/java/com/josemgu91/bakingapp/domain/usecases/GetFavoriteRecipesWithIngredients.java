@@ -25,7 +25,7 @@
 package com.josemgu91.bakingapp.domain.usecases;
 
 import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
-import com.josemgu91.bakingapp.domain.datagateways.RecipeDataGateway;
+import com.josemgu91.bakingapp.domain.datagateways.FavoriteRecipesDataGateway;
 import com.josemgu91.bakingapp.domain.entities.Ingredient;
 import com.josemgu91.bakingapp.domain.entities.Recipe;
 import com.josemgu91.bakingapp.domain.usecases.common.AbstractGetUseCase;
@@ -40,18 +40,18 @@ import java.util.List;
  * Created by jose on 2/22/18.
  */
 
-public class GetRecipesWithIngredients extends AbstractGetUseCase<List<Recipe>, List<RecipeWithIngredientsOutput>> {
+public class GetFavoriteRecipesWithIngredients extends AbstractGetUseCase<List<Recipe>, List<RecipeWithIngredientsOutput>> {
 
-    private final RecipeDataGateway recipeDataGateway;
+    private final FavoriteRecipesDataGateway favoriteRecipesDataGateway;
 
-    public GetRecipesWithIngredients(GetUseCaseOutput<List<RecipeWithIngredientsOutput>> getUseCaseOutput, RecipeDataGateway recipeDataGateway) {
+    public GetFavoriteRecipesWithIngredients(GetUseCaseOutput<List<RecipeWithIngredientsOutput>> getUseCaseOutput, FavoriteRecipesDataGateway favoriteRecipesDataGateway) {
         super(getUseCaseOutput, new ListMapper<>(new RecipeWithIngredientsMapper()));
-        this.recipeDataGateway = recipeDataGateway;
+        this.favoriteRecipesDataGateway = favoriteRecipesDataGateway;
     }
 
     @Override
     protected List<Recipe> getData() throws DataGatewayException {
-        return recipeDataGateway.getRecipes();
+        return favoriteRecipesDataGateway.getFavoriteRecipes();
     }
 
     private static class RecipeWithIngredientsMapper implements OutputMapper<Recipe, RecipeWithIngredientsOutput> {

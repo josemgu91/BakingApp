@@ -25,7 +25,6 @@
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget;
 
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractGetPresenter;
 import com.josemgu91.bakingapp.domain.usecases.RecipeWithIngredientsOutput;
 import com.josemgu91.bakingapp.domain.util.ListMapper;
@@ -39,37 +38,37 @@ import java.util.concurrent.Executor;
  * Created by jose on 2/22/18.
  */
 
-public class GetRecipesWithIngredientsPresenter extends AbstractGetPresenter<List<RecipeWithIngredientsOutput>, GetRecipesWithIngredientsViewModel> {
+public class GetFavoriteRecipesWithIngredientsPresenter extends AbstractGetPresenter<List<RecipeWithIngredientsOutput>, GetFavoriteRecipesWithIngredientsViewModel> {
 
-    private ListMapper<RecipeWithIngredientsOutput, GetRecipesWithIngredientsViewModel.Recipe> recipesOutputListMapper;
+    private ListMapper<RecipeWithIngredientsOutput, GetFavoriteRecipesWithIngredientsViewModel.Recipe> recipesOutputListMapper;
 
-    public GetRecipesWithIngredientsPresenter(GetView<GetRecipesWithIngredientsViewModel> view, Executor viewExecutor) {
+    public GetFavoriteRecipesWithIngredientsPresenter(GetView<GetFavoriteRecipesWithIngredientsViewModel> view, Executor viewExecutor) {
         super(view, viewExecutor);
         this.recipesOutputListMapper = new ListMapper<>(new RecipesWithIngredientsOutputMapper());
     }
 
     @Override
-    protected GetRecipesWithIngredientsViewModel createResultViewModel(List<RecipeWithIngredientsOutput> recipeWithIngredientsOutputs) {
-        return new GetRecipesWithIngredientsViewModel(
+    protected GetFavoriteRecipesWithIngredientsViewModel createResultViewModel(List<RecipeWithIngredientsOutput> recipeWithIngredientsOutputs) {
+        return new GetFavoriteRecipesWithIngredientsViewModel(
                 recipesOutputListMapper.map(recipeWithIngredientsOutputs)
         );
     }
 
-    private class RecipesWithIngredientsOutputMapper implements OutputMapper<RecipeWithIngredientsOutput, GetRecipesWithIngredientsViewModel.Recipe> {
+    private class RecipesWithIngredientsOutputMapper implements OutputMapper<RecipeWithIngredientsOutput, GetFavoriteRecipesWithIngredientsViewModel.Recipe> {
 
         @Override
-        public GetRecipesWithIngredientsViewModel.Recipe map(RecipeWithIngredientsOutput recipeWithIngredientsOutput) {
-            final List<GetRecipesWithIngredientsViewModel.Recipe.Ingredient> ingredients = new ArrayList<>();
+        public GetFavoriteRecipesWithIngredientsViewModel.Recipe map(RecipeWithIngredientsOutput recipeWithIngredientsOutput) {
+            final List<GetFavoriteRecipesWithIngredientsViewModel.Recipe.Ingredient> ingredients = new ArrayList<>();
             for (final RecipeWithIngredientsOutput.Ingredient ingredient : recipeWithIngredientsOutput.getIngredients()) {
                 ingredients.add(
-                        new GetRecipesWithIngredientsViewModel.Recipe.Ingredient(
+                        new GetFavoriteRecipesWithIngredientsViewModel.Recipe.Ingredient(
                                 ingredient.getMeasureUnit(),
                                 ingredient.getName(),
                                 ingredient.getQuantity()
                         )
                 );
             }
-            return new GetRecipesWithIngredientsViewModel.Recipe(
+            return new GetFavoriteRecipesWithIngredientsViewModel.Recipe(
                     recipeWithIngredientsOutput.getId(),
                     recipeWithIngredientsOutput.getName(),
                     recipeWithIngredientsOutput.getServings(),

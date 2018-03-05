@@ -24,6 +24,8 @@
 
 package com.josemgu91.bakingapp.android.ui;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -44,6 +46,8 @@ import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.MarkRecipeAsFav
 import com.josemgu91.bakingapp.android.Application;
 import com.josemgu91.bakingapp.android.ui.recipe_detail.RecipeDetailFragment;
 import com.josemgu91.bakingapp.android.ui.recipe_step_detail.RecipeStepDetailFragment;
+import com.josemgu91.bakingapp.android.widget.RecipesWidgetProvider;
+import com.josemgu91.bakingapp.android.widget.RecipesWidgetService;
 import com.josemgu91.bakingapp.domain.datagateways.DataGatewayException;
 
 /**
@@ -180,13 +184,21 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         floatingActionButtonMarkAsFavorite.setImageResource(iconDrawable);
     }
 
+    private void updateLauncherWidget() {
+        final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipesWidgetProvider.class));
+        RecipesWidgetService.update(this, appWidgetIds);
+    }
+
     private MarkRecipeAsFavoriteController createMarkAsFavoriteInteraction() {
         final com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<MarkRecipeAsFavoriteViewModel> markAsFavoriteView
                 = new com.josemgu91.bakingapp.adapter.presentation.ui.graphical.View<MarkRecipeAsFavoriteViewModel>() {
             @Override
             public void showResult(MarkRecipeAsFavoriteViewModel markRecipeAsFavoriteViewModel) {
                 final boolean markedAsFavorite = markRecipeAsFavoriteViewModel.isMarkedAsFavorite();
+                isFavorite = markedAsFavorite;
                 setMarkAsFavoriteButtonIcon(markedAsFavorite);
+                updateLauncherWidget();
             }
 
             @Override

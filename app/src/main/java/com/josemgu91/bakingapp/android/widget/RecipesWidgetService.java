@@ -31,26 +31,29 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.josemgu91.bakingapp.R;
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.GetView;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsController;
-import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetRecipesWithIngredientsViewModel;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetFavoriteRecipesWithIngredientsController;
+import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget.GetFavoriteRecipesWithIngredientsViewModel;
 import com.josemgu91.bakingapp.android.ui.ControllerFactoryImpl;
 import com.josemgu91.bakingapp.android.ui.RecipeDetailActivity;
+
+import java.util.Arrays;
 
 /**
  * Created by jose on 2/21/18.
  */
 
-public class RecipesWidgetService extends Service implements GetView<GetRecipesWithIngredientsViewModel> {
+public class RecipesWidgetService extends Service implements GetView<GetFavoriteRecipesWithIngredientsViewModel> {
 
     private static final int FOREGROUND_NOTIFICATION_ID = 1;
     private static final String FOREGROUND_NOTIFICATION_CHANNEL_ID = "RecipesWidgetService";
@@ -63,8 +66,8 @@ public class RecipesWidgetService extends Service implements GetView<GetRecipesW
     @Override
     public void onCreate() {
         super.onCreate();
-        final GetRecipesWithIngredientsController getRecipesWithIngredientsController = new ControllerFactoryImpl(this).createGetRecipesWithIngredientsController(this);
-        getRecipesWithIngredientsController.getRecipesWithIngredients();
+        final GetFavoriteRecipesWithIngredientsController getFavoriteRecipesWithIngredientsController = new ControllerFactoryImpl(this).createGetRecipesWithIngredientsController(this);
+        getFavoriteRecipesWithIngredientsController.getFavoriteRecipesWithIngredients();
         appWidgetManager = AppWidgetManager.getInstance(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             final NotificationChannel notificationChannel = new NotificationChannel(
@@ -91,10 +94,24 @@ public class RecipesWidgetService extends Service implements GetView<GetRecipesW
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.hasExtra(PARAM_WIDGET_IDS)) {
             widgetIds = intent.getIntArrayExtra(PARAM_WIDGET_IDS);
+            Log.d("RecipesWidgetService", "widgetIds: " + Arrays.toString(widgetIds));
         } else {
             throw new IllegalStateException("The Intent hasn't the PARAM_RECIPES content!");
         }
         return START_NOT_STICKY;
+    }
+
+    public static void update(final Context context, final int[] appWidgetIds) {
+        final Intent intent = new Intent(context, RecipesWidgetService.class);
+        intent.putExtra(RecipesWidgetService.PARAM_WIDGET_IDS, appWidgetIds);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            /*Starting the service as foreground because the Android O background execution limits.
+             *See: https://developer.android.com/about/versions/oreo/background.html
+             */
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     @Nullable
@@ -104,11 +121,30 @@ public class RecipesWidgetService extends Service implements GetView<GetRecipesW
     }
 
     @Override
-    public void showResult(GetRecipesWithIngredientsViewModel getRecipesWithIngredientsViewModel) {
+    public void showResult(GetFavoriteRecipesWithIngredientsViewModel getFavoriteRecipesWithIngredientsViewModel) {
+        updateResult();
+        finishService();
+    }
+
+    @Override
+    public void showInProgress() {
+
+    }
+
+    @Override
+    public void showError() {
+        finishService();
+    }
+
+    @Override
+    public void showNoResult() {
+        updateResult();
+        finishService();
+    }
+
+    private void updateResult() {
         final RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_recipes);
-        final Bundle recipeListBundle = new RecipeBundleMapper().toBundle(getRecipesWithIngredientsViewModel.getRecipes());
-        final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class)
-                .putExtra(RemoteViewsService.PARAM_RECIPES, recipeListBundle);
+        final Intent remoteViewsServiceIntent = new Intent(this, RemoteViewsService.class);
         remoteViews.setRemoteAdapter(R.id.listview_recipes, remoteViewsServiceIntent);
         /*
          * TODO: I'm not so sure why this restarts the "RecipeDetailActivity"
@@ -128,22 +164,6 @@ public class RecipesWidgetService extends Service implements GetView<GetRecipesW
                 )
         );
         updateWidgets(remoteViews);
-        finishService();
-    }
-
-    @Override
-    public void showInProgress() {
-
-    }
-
-    @Override
-    public void showError() {
-        finishService();
-    }
-
-    @Override
-    public void showNoResult() {
-        finishService();
     }
 
     private void finishService() {
@@ -154,6 +174,7 @@ public class RecipesWidgetService extends Service implements GetView<GetRecipesW
         if (widgetIds == null) {
             throw new IllegalStateException("widgetIds is null!");
         }
+        appWidgetManager.notifyAppWidgetViewDataChanged(widgetIds, R.id.listview_recipes);
         appWidgetManager.updateAppWidget(widgetIds, remoteViews);
     }
 

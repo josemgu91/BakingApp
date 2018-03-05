@@ -30,11 +30,11 @@ import java.util.List;
  * Created by jose on 2/22/18.
  */
 
-public class GetRecipesWithIngredientsViewModel {
+public class GetFavoriteRecipesWithIngredientsViewModel {
 
     private final List<Recipe> recipes;
 
-    public GetRecipesWithIngredientsViewModel(List<Recipe> recipes) {
+    public GetFavoriteRecipesWithIngredientsViewModel(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 
@@ -54,7 +54,7 @@ public class GetRecipesWithIngredientsViewModel {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GetRecipesWithIngredientsViewModel that = (GetRecipesWithIngredientsViewModel) o;
+        GetFavoriteRecipesWithIngredientsViewModel that = (GetFavoriteRecipesWithIngredientsViewModel) o;
 
         return recipes != null ? recipes.equals(that.recipes) : that.recipes == null;
     }

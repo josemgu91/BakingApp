@@ -25,8 +25,8 @@
 package com.josemgu91.bakingapp.adapter.presentation.ui.graphical.widget;
 
 import com.josemgu91.bakingapp.adapter.presentation.ui.graphical.common.AbstractController;
-import com.josemgu91.bakingapp.domain.datagateways.RecipeDataGateway;
-import com.josemgu91.bakingapp.domain.usecases.GetRecipesWithIngredients;
+import com.josemgu91.bakingapp.domain.datagateways.FavoriteRecipesDataGateway;
+import com.josemgu91.bakingapp.domain.usecases.GetFavoriteRecipesWithIngredients;
 import com.josemgu91.bakingapp.domain.usecases.RecipeWithIngredientsOutput;
 import com.josemgu91.bakingapp.domain.usecases.common.GetUseCaseOutput;
 
@@ -37,20 +37,20 @@ import java.util.concurrent.Executor;
  * Created by jose on 2/22/18.
  */
 
-public class GetRecipesWithIngredientsController extends AbstractController {
+public class GetFavoriteRecipesWithIngredientsController extends AbstractController {
 
-    private final GetRecipesWithIngredients getRecipesWithIngredients;
+    private final GetFavoriteRecipesWithIngredients getFavoriteRecipesWithIngredients;
 
-    public GetRecipesWithIngredientsController(Executor controllerExecutor, GetUseCaseOutput<List<RecipeWithIngredientsOutput>> getRecipeWithIngredientsUseCaseOutput, RecipeDataGateway recipeDataGateway) {
+    public GetFavoriteRecipesWithIngredientsController(Executor controllerExecutor, GetUseCaseOutput<List<RecipeWithIngredientsOutput>> getRecipeWithIngredientsUseCaseOutput, FavoriteRecipesDataGateway favoriteRecipesDataGateway) {
         super(controllerExecutor);
-        this.getRecipesWithIngredients = new GetRecipesWithIngredients(getRecipeWithIngredientsUseCaseOutput, recipeDataGateway);
+        this.getFavoriteRecipesWithIngredients = new GetFavoriteRecipesWithIngredients(getRecipeWithIngredientsUseCaseOutput, favoriteRecipesDataGateway);
     }
 
-    public void getRecipesWithIngredients() {
+    public void getFavoriteRecipesWithIngredients() {
         executeInControllerExecutor(new Runnable() {
             @Override
             public void run() {
-                getRecipesWithIngredients.execute();
+                getFavoriteRecipesWithIngredients.execute();
             }
         });
     }
