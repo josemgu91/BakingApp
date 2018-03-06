@@ -70,6 +70,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private static final String PARAM_RECIPE_STEP_PICTURE_THUMBNAIL_URL = "recipe_step_picture_thumbnail_url";
 
     private static final String SAVED_INSTANCE_STATE_VIDEO_POSITION = "video_position";
+    private static final String SAVED_INSTANCE_STATE_VIDEO_PLAY_VIDEO = "play_video";
 
     private String recipeStepDescription;
     private String recipeStepShortDescription;
@@ -85,6 +86,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     private boolean hasVideo;
 
     private long lastVideoPosition;
+    private boolean shouldPlayVideo;
 
     public static RecipeStepDetailFragment newInstance(final GetRecipeStepsViewModel.Step recipeStep) {
         final RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
@@ -115,6 +117,10 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
 
         if (savedInstanceState != null) {
             lastVideoPosition = savedInstanceState.getLong(SAVED_INSTANCE_STATE_VIDEO_POSITION);
+            shouldPlayVideo = savedInstanceState.getBoolean(SAVED_INSTANCE_STATE_VIDEO_PLAY_VIDEO);
+        } else {
+            lastVideoPosition = 0;
+            shouldPlayVideo = true;
         }
 
         mediaFocusManager = new MediaFocusManager(getActivity(), this);
@@ -168,37 +174,27 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     @Override
     public void onStart() {
         super.onStart();
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
-            if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
-                initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
-                getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
-            } else {
-                simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
-            }
+        hasVideo = !recipeStepVideoUrl.isEmpty();
+        if (!hasVideo) {
+            simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
+        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            initMediaResources();
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
-                initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
-                getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
-            } else {
-                simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
-            }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M && hasVideo) {
+            initMediaResources();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (hasVideo) {
-            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-                releaseVideoResources();
-            }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M && hasVideo) {
+            releaseMediaResources();
         }
     }
 
@@ -206,7 +202,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onStop() {
         super.onStop();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && hasVideo) {
-            releaseVideoResources();
+            releaseMediaResources();
         }
     }
 
@@ -215,11 +211,18 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         super.onSaveInstanceState(outState);
         if (hasVideo) {
             lastVideoPosition = simpleExoPlayer.getCurrentPosition();
+            shouldPlayVideo = simpleExoPlayer.getPlayWhenReady();
             outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, lastVideoPosition);
+            outState.putBoolean(SAVED_INSTANCE_STATE_VIDEO_PLAY_VIDEO, shouldPlayVideo);
         }
     }
 
-    private void releaseVideoResources() {
+    private void initMediaResources() {
+        initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus() && shouldPlayVideo);
+        getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+    }
+
+    private void releaseMediaResources() {
         getActivity().unregisterReceiver(noisyReceiver);
         simpleExoPlayer.setPlayWhenReady(false);
         simpleExoPlayer.stop();
@@ -253,9 +256,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
             simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), new DefaultTrackSelector());
             simpleExoPlayer.prepare(mediaSource);
             simpleExoPlayer.addListener(new CustomExoPlayerEventListener(this));
-            if (lastVideoPosition > 0) {
-                simpleExoPlayer.seekTo(lastVideoPosition);
-            }
+            simpleExoPlayer.seekTo(lastVideoPosition);
             simpleExoPlayer.setPlayWhenReady(autoPlay && getUserVisibleHint());
             simpleExoPlayerViewRecipeStepVideo.setPlayer(simpleExoPlayer);
         }
