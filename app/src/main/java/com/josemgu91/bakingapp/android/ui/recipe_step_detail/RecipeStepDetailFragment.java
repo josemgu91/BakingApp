@@ -193,6 +193,8 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     @Override
     public void onPause() {
         super.onPause();
+        lastVideoPosition = simpleExoPlayer.getCurrentPosition();
+        shouldPlayVideo = simpleExoPlayer.getPlayWhenReady();
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M && hasVideo) {
             releaseMediaResources();
         }
@@ -210,8 +212,6 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (hasVideo) {
-            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
-            shouldPlayVideo = simpleExoPlayer.getPlayWhenReady();
             outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, lastVideoPosition);
             outState.putBoolean(SAVED_INSTANCE_STATE_VIDEO_PLAY_VIDEO, shouldPlayVideo);
         }
