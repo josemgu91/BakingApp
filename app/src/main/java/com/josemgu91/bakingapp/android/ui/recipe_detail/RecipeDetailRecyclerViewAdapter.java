@@ -264,11 +264,14 @@ public class RecipeDetailRecyclerViewAdapter extends RecyclerView.Adapter<Recycl
             });
             final String stepPictureUrl = step.getPictureUrl();
             if (!stepPictureUrl.isEmpty()) {
+                imageViewStep.setVisibility(View.VISIBLE);
                 Picasso.with(context)
                         .load(stepPictureUrl)
                         .placeholder(defaultStepDrawable)
                         .error(defaultStepDrawable)
                         .into(imageViewStep);
+            } else {
+                imageViewStep.setVisibility(View.GONE);
             }
         }
     }
