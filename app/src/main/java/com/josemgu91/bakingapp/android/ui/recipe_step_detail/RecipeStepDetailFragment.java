@@ -87,6 +87,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
 
     private long lastVideoPosition;
     private boolean shouldPlayVideo;
+    private boolean videoStoppedBecauseNonVisible;
 
     public static RecipeStepDetailFragment newInstance(final GetRecipeStepsViewModel.Step recipeStep) {
         final RecipeStepDetailFragment fragment = new RecipeStepDetailFragment();
@@ -193,8 +194,10 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     @Override
     public void onPause() {
         super.onPause();
-        lastVideoPosition = simpleExoPlayer.getCurrentPosition();
-        shouldPlayVideo = simpleExoPlayer.getPlayWhenReady();
+        if (hasVideo) {
+            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
+            shouldPlayVideo = simpleExoPlayer.getPlayWhenReady();
+        }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M && hasVideo) {
             releaseMediaResources();
         }
@@ -213,7 +216,7 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
         super.onSaveInstanceState(outState);
         if (hasVideo) {
             outState.putLong(SAVED_INSTANCE_STATE_VIDEO_POSITION, lastVideoPosition);
-            outState.putBoolean(SAVED_INSTANCE_STATE_VIDEO_PLAY_VIDEO, shouldPlayVideo);
+            outState.putBoolean(SAVED_INSTANCE_STATE_VIDEO_PLAY_VIDEO, shouldPlayVideo || videoStoppedBecauseNonVisible);
         }
     }
 
@@ -257,6 +260,9 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
             simpleExoPlayer.prepare(mediaSource);
             simpleExoPlayer.addListener(new CustomExoPlayerEventListener(this));
             simpleExoPlayer.seekTo(lastVideoPosition);
+            if (autoPlay && !getUserVisibleHint()) {
+                videoStoppedBecauseNonVisible = true;
+            }
             simpleExoPlayer.setPlayWhenReady(autoPlay && getUserVisibleHint());
             simpleExoPlayerViewRecipeStepVideo.setPlayer(simpleExoPlayer);
         }
