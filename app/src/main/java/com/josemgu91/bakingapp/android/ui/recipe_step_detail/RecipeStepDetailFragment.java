@@ -32,6 +32,7 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -167,19 +168,44 @@ public class RecipeStepDetailFragment extends Fragment implements AudioManager.O
     @Override
     public void onStart() {
         super.onStart();
-        if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
-            initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
-            getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
-        } else {
-            simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
+                initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
+                getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+            } else {
+                simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+            if (hasVideo = !recipeStepVideoUrl.isEmpty()) {
+                initializeExoPlayer(recipeStepVideoUrl, mediaFocusManager.requestAudioFocus());
+                getActivity().registerReceiver(noisyReceiver, noisyReceiverIntentFilter);
+            } else {
+                simpleExoPlayerViewRecipeStepVideo.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (hasVideo) {
+            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                releaseVideoResources();
+            }
         }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (hasVideo) {
-            lastVideoPosition = simpleExoPlayer.getCurrentPosition();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M && hasVideo) {
             releaseVideoResources();
         }
     }
